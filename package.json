@@ -1,0 +1,19 @@
+{
+  "name": "fantasy-football-team-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "team-builder.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iniguezdj/fantasy-football-team-builder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iniguezdj/fantasy-football-team-builder/issues"
+  },
+  "homepage": "https://github.com/iniguezdj/fantasy-football-team-builder#readme"
+}

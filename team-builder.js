@@ -1,6 +1,6 @@
-const draftkings = require('draftkings.json'); // update this file with the csv data from draftkings website
+const draftkings = require('./draftkings.json'); // update this file with the csv data from draftkings website
 
-const bench = []; // remove these players from final predictions
+const bench = ["Aaron Jones"]; // remove these players from final predictions
 const predictions = [];
 const fs = require('fs');
 const allowedSalary = 50000; // draftkings salary
@@ -129,7 +129,44 @@ function predict() {
 predict();
 
 // ---------------------------------------------------------------------------------
-// buildi a team
+// remove bench players before analyzing full player lists
+// ---------------------------------------------------------------------------------
+// if (bench.length) {
+//     console.log('+------------------------+');
+//     console.log('| removing bench players |');
+//     console.log('+------------------------+');
+//     for (let i = quarterbacks.length - 1; i >= 0; i--) {
+//         for (let j = 0; j < bench.length; j++) {
+//             if (quarterbacks[i] && (quarterbacks[i].name === bench[j])) {
+//                 quarterbacks.splice(i, 1);
+//             }
+//         }
+//     }
+//     for (let i = runningbacks.length - 1; i >= 0; i--) {
+//         for (let j = 0; j < bench.length; j++) {
+//             if (runningbacks[i] && (runningbacks[i].name === bench[j])) {
+//                 runningbacks.splice(i, 1);
+//             }
+//         }
+//     }
+//     for (let i = widereceivers.length - 1; i >= 0; i--) {
+//         for (let j = 0; j < bench.length; j++) {
+//             if (widereceivers[i] && (widereceivers[i].name === bench[j])) {
+//                 widereceivers.splice(i, 1);
+//             }
+//         }
+//     }
+//     for (let i = tightends.length - 1; i >= 0; i--) {
+//         for (let j = 0; j < bench.length; j++) {
+//             if (tightends[i] && (tightends[i].name === bench[j])) {
+//                 tightends.splice(i, 1);
+//             }
+//         }
+//     }
+// }
+
+// ---------------------------------------------------------------------------------
+// build a team
 // ---------------------------------------------------------------------------------
 function createTeam(array) {
 
@@ -394,7 +431,7 @@ function createTeam(array) {
         // salary outcome
         finalteam.salary = overSalary;
         let jsondata = JSON.stringify(finalteam);
-        fs.writeFile('./../predictions/team.json', jsondata, function (err) {
+        fs.writeFile('./team.json', jsondata, function (err) {
             if (err) throw err;
         });
         console.log('+-----------------------------------+');
