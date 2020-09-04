@@ -6,18 +6,18 @@ Automatically build a team for DraftKings.
 
 The team builder uses weekly game data provided by DraftKings to generate a full team within the salary cap.
 
-## Installation
+## Installation and Usage
 
-#### NPM
+### NPM
 
 ```bash
 npm init
 ```
-#### DraftKings Data
+### DraftKings Data
 
 Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `draftkings.json` and save it in the project.
 
-##### `draftkings.json` should look like this:
+`draftkings.json` should look like this:
 
 ```javascript
 [
@@ -46,7 +46,7 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
-#### Build a Team
+### Build a Team
 
 ```bash
 node team-builder.js
@@ -54,11 +54,7 @@ node team-builder.js
 
 A file named 'team.json' will be saved in the project.
 
-#### Customization
-
-`team-builder.js` can be modified to change the order in which positions are adjusted.
-
-#### Bench
+### Bench
 
 Remove players from the team builder by adding them to the bench array.
 
