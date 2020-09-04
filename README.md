@@ -15,9 +15,9 @@ npm init
 ```
 #### DraftKings Data
 
-Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file 'draftkings.json' and save it in the project.
+Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `draftkings.json` and save it in the project.
 
-##### JSON data should look like this:
+##### `draftkings.json` should look like this:
 
 ```javascript
 [
@@ -53,3 +53,15 @@ node team-builder.js
 ```
 
 A file named 'team.json' will be saved in the project.
+
+#### Customization
+
+`team-builder.js` can be modified to change the order in which positions are adjusted.
+
+#### Bench
+
+Remove players from the team builder by adding them to the bench array.
+
+```javascript
+const bench = [ "Christian McCaffrey", "Michael Thomas" ]
+```
