@@ -1,8 +1,8 @@
 # Fantasy Football Team Builder
+Automatically build a team for DraftKings.
 
 ## About
-
-The team builder uses weekly game data provided by draftkings to generate a full team within the salary cap.
+The team builder uses weekly game data provided by DraftKings to generate a full team within the salary cap.
 
 ## Installation
 
@@ -11,7 +11,7 @@ The team builder uses weekly game data provided by draftkings to generate a full
 ```bash
 npm init
 ```
-#### Draftkings Data
+#### DraftKings Data
 
 Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/).
 
