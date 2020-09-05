@@ -1,7 +1,7 @@
 const fs = require('fs');
 const data = require('./draftkings.json'); // update this file with csv data from draftkings website
 const draftkings = [...data]; // clone to manipulate later
-const bench = ["Mark Ingram II", "Cardinals"]; // remove these players from predictions
+const bench = []; // remove these players from predictions
 const predictions = []; // list of players sorted by value to build a team from
 const allowedSalary = 50000; // manually change if draftkings salary is different
 
@@ -252,20 +252,7 @@ function createTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign players to team
     // ---------------------------------------------------------------------------------
-    for (i = 0; i < array.length; i++) {
-
-        // assign best value qb1 ////////////////////////////
-        if (array[i].position === 'QB') {
-            if (array[i].value < team.qb1.value) {
-                team.qb1.name = array[i].name;
-                team.qb1.salary = array[i].salary;
-                team.qb1.position = array[i].position;
-                team.qb1.points = array[i].points;
-                team.qb1.team = array[i].team;
-                team.qb1.avgpoints = array[i].avgpoints;
-                team.qb1.value = array[i].value;
-            }
-        }
+    for (i = 0; i < array.length; i++) {       
 
         // assign best value rb1 ////////////////////////////
         if (array[i].position === 'RB') {
@@ -322,6 +309,19 @@ function createTeam(array) {
                 }
             }
         }
+        
+        // assign best value qb1 ////////////////////////////
+        if (array[i].position === 'QB') {
+            if (array[i].value < team.qb1.value) {
+                team.qb1.name = array[i].name;
+                team.qb1.salary = array[i].salary;
+                team.qb1.position = array[i].position;
+                team.qb1.points = array[i].points;
+                team.qb1.team = array[i].team;
+                team.qb1.avgpoints = array[i].avgpoints;
+                team.qb1.value = array[i].value;
+            }
+        } 
 
         // assign best value wr3 //////////////////////////
         if (array[i].position === 'WR') {
@@ -338,20 +338,7 @@ function createTeam(array) {
                     }
                 }
             }
-        }
-
-        // assign best value te1 //////////////////////////
-        if (array[i].position === 'TE') {
-            if (array[i].value < team.te1.value) {
-                team.te1.name = array[i].name;
-                team.te1.salary = array[i].salary;
-                team.te1.position = array[i].position;
-                team.te1.points = array[i].points;
-                team.te1.team = array[i].team;
-                team.te1.avgpoints = array[i].avgpoints;
-                team.te1.value = array[i].value;
-            }
-        }
+        }      
 
         // assign best value fx1 //////////////////////////
         if ((array[i].position === 'RB') || (array[i].position === 'WR') || (array[i].position === 'TE')) {
@@ -375,6 +362,19 @@ function createTeam(array) {
                         }
                     }
                 }
+            }
+        }
+
+        // assign best value te1 //////////////////////////
+        if (array[i].position === 'TE') {
+            if (array[i].value < team.te1.value) {
+                team.te1.name = array[i].name;
+                team.te1.salary = array[i].salary;
+                team.te1.position = array[i].position;
+                team.te1.points = array[i].points;
+                team.te1.team = array[i].team;
+                team.te1.avgpoints = array[i].avgpoints;
+                team.te1.value = array[i].value;
             }
         }
 
@@ -437,7 +437,7 @@ function createTeam(array) {
 }
 
 // ---------------------------------------------------------------------------------
-// if over salary, remove highest paid player and replace with next highest
+// if over salary, begin replacing players
 // ---------------------------------------------------------------------------------
 function reconstructTeam() {
 
