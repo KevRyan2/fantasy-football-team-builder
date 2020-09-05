@@ -15,7 +15,7 @@ npm init
 ```
 ### DraftKings Data
 
-Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `draftkings.json` and save it in the project.
+Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `draftkings.json` and save it in the project directory.
 
 `draftkings.json` should look similar to this:
 
