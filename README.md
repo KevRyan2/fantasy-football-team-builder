@@ -52,7 +52,7 @@ Download the player data in CSV format from their site and convert it to JSON wi
 node team-builder.js
 ```
 
-A file named 'team.json' will be saved in the project.
+A file named `team.json` will be saved in the project.
 
 ### Bench
 
@@ -64,7 +64,7 @@ const bench = [ "Christian McCaffrey", "Michael Thomas" ]
 
 ### Rebuilding a Team
 
-The first time the team is built, if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array;
+The first time the team is built, if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
 
 ```javascript
 const replacements = [ "DST", "DST", "TE", "QB", "WR", "TE", "RB", "DST" ]
