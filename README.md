@@ -164,7 +164,6 @@ const replacements = [ "DST", "DST", "TE", "QB", "WR", "TE", "RB", "DST" ]
 | allowed salary         | 50000
 | total salary           | 49900
 | over salary            | -100
-| total predicted points | 0
 | total dk avg points    | 148
 +------------------------+----------+
 ```

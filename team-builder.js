@@ -452,7 +452,7 @@ function createTeam(array) {
         console.log('| allowed salary         |', allowedSalary);
         console.log('| total salary           |', totalSalary);
         console.log('| over salary            |', overSalary);
-        console.log('| total predicted points |', finalteam.totalpoints);
+        // console.log('| total predicted points |', finalteam.totalpoints);
         console.log('| total dk avg points    |', finalteam.totaldkpoints);
         console.log('+------------------------+----------+');
 
