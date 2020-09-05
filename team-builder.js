@@ -430,15 +430,15 @@ function createTeam(array) {
     } else {
 
         let finalteam = team;
-        let total = 0;
+        // let total = 0;
         let totalavg = 0;
         for (const property in finalteam) {
-            let pointsvalue = finalteam[property].points;
-            total += pointsvalue;
+            // let pointsvalue = finalteam[property].points;
+            // total += pointsvalue;
             let avgpointsvalue = finalteam[property].avgpoints;
             totalavg += avgpointsvalue;
         }
-        finalteam.totalpoints = parseInt(total.toFixed(2));
+        // finalteam.totalpoints = parseInt(total.toFixed(2));
         finalteam.totaldkpoints = parseInt(totalavg.toFixed(2))
         // salary outcome
         finalteam.salary = overSalary;

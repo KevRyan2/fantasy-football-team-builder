@@ -156,7 +156,6 @@ const replacements = [ "DST", "DST", "TE", "QB", "WR", "TE", "RB", "DST" ]
     avgpoints: 10.16,
     value: 344.48818897637796
   },
-  totalpoints: 0,
   totaldkpoints: 148,
   salary: -100
 }
