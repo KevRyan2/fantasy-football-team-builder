@@ -61,3 +61,11 @@ Remove players from the team builder by adding them to the bench array.
 ```javascript
 const bench = [ "Christian McCaffrey", "Michael Thomas" ]
 ```
+
+### Rebuilding a Team
+
+The first time the team is built, if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified here:
+
+```javascript
+const replacements = [ "DST", "DST", "TE", "QB", "WR", "TE", "RB", "DST" ]
+```
