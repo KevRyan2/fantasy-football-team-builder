@@ -4,7 +4,7 @@ Automatically build a team for DraftKings.
 
 ## About
 
-The team builder uses weekly game data provided by DraftKings to generate a full team within the salary cap.
+The team builder uses weekly game data provided by DraftKings to generate a full team within the salary cap. It places a 'value' on each player according to their salary versus average points per game.
 
 ## Installation and Usage
 

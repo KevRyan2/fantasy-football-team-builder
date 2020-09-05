@@ -1,9 +1,9 @@
 const fs = require('fs');
 const data = require('./draftkings.json'); // update this file with csv data from draftkings website
-const draftkings = [...data];
-const bench = ["Aaron Jones", "Mark Ingram II", "Bills"]; // remove these players from predictions
-const predictions = [];
-const allowedSalary = 50000; // draftkings salary
+const draftkings = [...data]; // clone to manipulate later
+const bench = ["Mark Ingram II", "Cardinals"]; // remove these players from predictions
+const predictions = []; // list of players sorted by value to build a team from
+const allowedSalary = 50000; // manually change if draftkings salary is different
 
 let replaceqb = 0;
 let replacerb = 0;
@@ -108,6 +108,9 @@ function predict() {
     // ---------------------------------------------------------------------------------
     // loop over draftkings data for dst data
     // ---------------------------------------------------------------------------------
+    console.log('+------------------------+');
+    console.log('| training defenses      |');
+    console.log('+------------------------+');
     for (i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'DST') {
             if (draftkings[i].AvgPointsPerGame > 0) {
