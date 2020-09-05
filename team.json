@@ -1,1 +1,86 @@
-{"qb1":{"name":"Ryan Fitzpatrick","salary":5300,"position":"QB","team":"MIA","points":0,"avgpoints":17.9,"value":296.08938547486036},"rb1":{"name":"Aaron Jones","salary":6900,"position":"RB","team":"GB","points":0,"avgpoints":21.09,"value":327.16927453769557},"rb2":{"name":"Leonard Fournette","salary":6000,"position":"RB","team":"JAX","points":0,"avgpoints":17.96,"value":334.07572383073494},"wr1":{"name":"Davante Adams","salary":7300,"position":"WR","team":"GB","points":0,"avgpoints":20.96,"value":348.28244274809157},"wr2":{"name":"DeAndre Hopkins","salary":6800,"position":"WR","team":"ARI","points":0,"avgpoints":19.08,"value":356.39412997903565},"wr3":{"name":"Marvin Jones Jr.","salary":5500,"position":"WR","team":"DET","points":0,"avgpoints":15.38,"value":357.6072821846554},"te1":{"name":"Jason Witten","salary":3200,"position":"TE","team":"LV","points":0,"avgpoints":8.81,"value":363.22360953461975},"fx1":{"name":"Mark Ingram II","salary":5500,"position":"RB","team":"BAL","points":0,"avgpoints":16.29,"value":337.6304481276857},"dst1":{"name":"Ravens","salary":3100,"position":"DST","team":"BAL","points":0,"avgpoints":9.06,"value":342.1633554083885},"totalpoints":0,"totaldkpoints":146,"salary":-400}
+{
+    "qb1": {
+        "name": "Lamar Jackson",
+        "salary": 8100,
+        "position": "QB",
+        "team": "BAL",
+        "points": 0,
+        "avgpoints": 29.85,
+        "value": 271.356783919598
+    },
+    "rb1": {
+        "name": "Mark Ingram II",
+        "salary": 5500,
+        "position": "RB",
+        "team": "BAL",
+        "points": 0,
+        "avgpoints": 16.29,
+        "value": 337.6304481276857
+    },
+    "rb2": {
+        "name": "Austin Ekeler",
+        "salary": 7000,
+        "position": "RB",
+        "team": "LAC",
+        "points": 0,
+        "avgpoints": 20.19,
+        "value": 346.70629024269437
+    },
+    "wr1": {
+        "name": "Davante Adams",
+        "salary": 7300,
+        "position": "WR",
+        "team": "GB",
+        "points": 0,
+        "avgpoints": 20.96,
+        "value": 348.28244274809157
+    },
+    "wr2": {
+        "name": "DeAndre Hopkins",
+        "salary": 6800,
+        "position": "WR",
+        "team": "ARI",
+        "points": 0,
+        "avgpoints": 19.08,
+        "value": 356.39412997903565
+    },
+    "wr3": {
+        "name": "Marvin Jones Jr.",
+        "salary": 5500,
+        "position": "WR",
+        "team": "DET",
+        "points": 0,
+        "avgpoints": 15.38,
+        "value": 357.6072821846554
+    },
+    "te1": {
+        "name": "Jacob Hollister",
+        "salary": 3000,
+        "position": "TE",
+        "team": "SEA",
+        "points": 0,
+        "avgpoints": 8.25,
+        "value": 363.6363636363636
+    },
+    "fx1": {
+        "name": "Jason Witten",
+        "salary": 3200,
+        "position": "TE",
+        "team": "LV",
+        "points": 0,
+        "avgpoints": 8.81,
+        "value": 363.22360953461975
+    },
+    "dst1": {
+        "name": "49ers",
+        "salary": 3500,
+        "position": "DST",
+        "team": "SF",
+        "points": 0,
+        "avgpoints": 10.16,
+        "value": 344.48818897637796
+    },
+    "totalpoints": 0,
+    "totaldkpoints": 148,
+    "salary": -100
+}

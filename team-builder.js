@@ -4,12 +4,35 @@ const draftkings = [...data]; // clone to manipulate later
 const bench = []; // remove these players from predictions
 const predictions = []; // list of players sorted by value to build a team from
 const allowedSalary = 50000; // manually change if draftkings salary is different
+const salaryBuffer = -100;
+const replacements = [ // order of player replacemetns when rebuilding
+    'DST',
+    'DST',
+    'DST',
+    'DST',
+    'TE',
+    'TE',
+    'QB',
+    'QB',
+    'WR',
+    'WR',
+    'WR',
+    'RB',
+    'RB',
+    'TE',
+    'RB',
+    'RB',
+    'DST',
+    'DST',
+    'DST',
+    'DST',
+    'DST',
+    'WR',
+    'TE',
+    'QB'
+];
 
-let replaceqb = 0;
-let replacerb = 0;
-let replacewr = 0;
-let replacete = 0;
-let replacedst = 0;
+let replacement = 0; // increments on each replacement
 
 function predict() {
 
@@ -252,7 +275,7 @@ function createTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign players to team
     // ---------------------------------------------------------------------------------
-    for (i = 0; i < array.length; i++) {       
+    for (i = 0; i < array.length; i++) {
 
         // assign best value rb1 ////////////////////////////
         if (array[i].position === 'RB') {
@@ -309,7 +332,7 @@ function createTeam(array) {
                 }
             }
         }
-        
+
         // assign best value qb1 ////////////////////////////
         if (array[i].position === 'QB') {
             if (array[i].value < team.qb1.value) {
@@ -321,7 +344,7 @@ function createTeam(array) {
                 team.qb1.avgpoints = array[i].avgpoints;
                 team.qb1.value = array[i].value;
             }
-        } 
+        }
 
         // assign best value wr3 //////////////////////////
         if (array[i].position === 'WR') {
@@ -338,7 +361,7 @@ function createTeam(array) {
                     }
                 }
             }
-        }      
+        }
 
         // assign best value fx1 //////////////////////////
         if ((array[i].position === 'RB') || (array[i].position === 'WR') || (array[i].position === 'TE')) {
@@ -348,15 +371,13 @@ function createTeam(array) {
                         if (array[i].name != team.wr1.name) {
                             if (array[i].name != team.wr2.name) {
                                 if (array[i].name != team.wr3.name) {
-                                    if (array[i].name != team.te1.name) {
-                                        team.fx1.name = array[i].name;
-                                        team.fx1.salary = array[i].salary;
-                                        team.fx1.position = array[i].position;
-                                        team.fx1.points = array[i].points;
-                                        team.fx1.team = array[i].team;
-                                        team.fx1.avgpoints = array[i].avgpoints;
-                                        team.fx1.value = array[i].value;
-                                    }
+                                    team.fx1.name = array[i].name;
+                                    team.fx1.salary = array[i].salary;
+                                    team.fx1.position = array[i].position;
+                                    team.fx1.points = array[i].points;
+                                    team.fx1.team = array[i].team;
+                                    team.fx1.avgpoints = array[i].avgpoints;
+                                    team.fx1.value = array[i].value;
                                 }
                             }
                         }
@@ -368,13 +389,15 @@ function createTeam(array) {
         // assign best value te1 //////////////////////////
         if (array[i].position === 'TE') {
             if (array[i].value < team.te1.value) {
-                team.te1.name = array[i].name;
-                team.te1.salary = array[i].salary;
-                team.te1.position = array[i].position;
-                team.te1.points = array[i].points;
-                team.te1.team = array[i].team;
-                team.te1.avgpoints = array[i].avgpoints;
-                team.te1.value = array[i].value;
+                if (array[i].name != team.fx1.name) {
+                    team.te1.name = array[i].name;
+                    team.te1.salary = array[i].salary;
+                    team.te1.position = array[i].position;
+                    team.te1.points = array[i].points;
+                    team.te1.team = array[i].team;
+                    team.te1.avgpoints = array[i].avgpoints;
+                    team.te1.value = array[i].value;
+                }
             }
         }
 
@@ -398,11 +421,11 @@ function createTeam(array) {
 
     if (overSalary > 0) {
 
-        reconstructTeam();
+        rebuildTeam();
 
-    } else if (overSalary < -500) {
+    } else if (overSalary < salaryBuffer) {
 
-        reconstructTeam();
+        rebuildTeam();
 
     } else {
 
@@ -439,249 +462,86 @@ function createTeam(array) {
 // ---------------------------------------------------------------------------------
 // if over salary, begin replacing players
 // ---------------------------------------------------------------------------------
-function reconstructTeam() {
+function rebuildTeam() {
+    console.log('+------------------------+');
+    console.log('| rebuilding team        |');
+    console.log('+------------------------+');
+    console.log('replacements[' + replacement + '] = ' + replacements[replacement]);
 
-    if (replacedst < 2) { // replace dst
-
-        console.log('+------------------------+');
-        console.log('| rebuilding team        |');
-        console.log('+------------------------+');
+    if (replacements[replacement] === 'DST') {
 
         let r = 0;
         for (i = 0; i < predictions.length; i++) {
             if (r === 0) {
                 if (predictions[i].position === 'DST') {
-                    // console.log('removing ', predictions[i].name);
+                    console.log('removing ', predictions[i].name);
                     predictions.splice(i, 1);
                     r++;
-                    replacedst++;
+                    replacement++;
                     const updatedPredictions = [...predictions];
                     createTeam(updatedPredictions);
                 }
             }
         }
 
-    } else if (replacete < 2) { // replace te
+    } else if (replacements[replacement] === 'TE') {
 
         let r = 0;
         for (i = 0; i < predictions.length; i++) {
             if (r === 0) {
                 if (predictions[i].position === 'TE') {
-                    // console.log('removing ', predictions[i].name);
+                    console.log('removing ', predictions[i].name);
                     predictions.splice(i, 1);
                     r++;
-                    replacete++;
+                    replacement++;
                     const updatedPredictions = [...predictions];
                     createTeam(updatedPredictions);
                 }
             }
         }
 
-    } else if (replaceqb < 2) { // replace qb
+    } else if (replacements[replacement] === 'QB') {
 
         let r = 0;
         for (i = 0; i < predictions.length; i++) {
             if (r === 0) {
                 if (predictions[i].position === 'QB') {
-                    // console.log('removing ', predictions[i].name);
-                    if (predictions.splice(i, 1)) {
-                        r++;
-                        replaceqb++;
-                        const updatedPredictions = [...predictions];
-                        createTeam(updatedPredictions);
-                    }
+                    console.log('removing ', predictions[i].name);
+                    predictions.splice(i, 1);
+                    r++;
+                    replacement++;
+                    const updatedPredictions = [...predictions];
+                    createTeam(updatedPredictions);
                 }
             }
         }
 
-    } else if (replacewr < 3) { // replace wr
+    } else if (replacements[replacement] === 'WR') {
 
         let r = 0;
         for (i = 0; i < predictions.length; i++) {
             if (r === 0) {
                 if (predictions[i].position === 'WR') {
-                    // console.log('removing ', predictions[i].name);
+                    console.log('removing ', predictions[i].name);
                     predictions.splice(i, 1);
                     r++;
-                    replacewr++;
+                    replacement++;
                     const updatedPredictions = [...predictions];
                     createTeam(updatedPredictions);
                 }
             }
         }
 
-    } else if (replacerb < 2) { // replace rb
+    } else if (replacements[replacement] === 'RB') {
 
         let r = 0;
         for (i = 0; i < predictions.length; i++) {
             if (r === 0) {
                 if (predictions[i].position === 'RB') {
-                    // console.log('removing ', predictions[i].name);
+                    console.log('removing ', predictions[i].name);
                     predictions.splice(i, 1);
                     r++;
-                    replacerb++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replacete < 3) { // replace te
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'TE') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacete++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replaceqb < 4) { // replace qb
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'QB') {
-                    // console.log('removing ', predictions[i].name);
-                    if (predictions.splice(i, 1)) {
-                        r++;
-                        replaceqb++;
-                        const updatedPredictions = [...predictions];
-                        createTeam(updatedPredictions);
-                    }
-                }
-            }
-        }
-
-    } else if (replacedst < 10) { // replace dst
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'DST') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacedst++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replacewr < 4) { // replace wr
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'WR') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacewr++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replacete < 4) { // replace te
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'TE') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacete++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replacedst < 15) { // replace dst
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'DST') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacedst++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replacerb < 3) { // replace rb
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'RB') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacerb++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replaceqb < 8) { // replace qb
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'QB') {
-                    // console.log('removing ', predictions[i].name);
-                    if (predictions.splice(i, 1)) {
-                        r++;
-                        replaceqb++;
-                        const updatedPredictions = [...predictions];
-                        createTeam(updatedPredictions);
-                    }
-                }
-            }
-        }
-
-    } else if (replacedst < 20) { // replace dst
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'DST') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacedst++;
-                    const updatedPredictions = [...predictions];
-                    createTeam(updatedPredictions);
-                }
-            }
-        }
-
-    } else if (replacete < 6) { // replace te
-
-        let r = 0;
-        for (i = 0; i < predictions.length; i++) {
-            if (r === 0) {
-                if (predictions[i].position === 'TE') {
-                    // console.log('removing ', predictions[i].name);
-                    predictions.splice(i, 1);
-                    r++;
-                    replacete++;
+                    replacement++;
                     const updatedPredictions = [...predictions];
                     createTeam(updatedPredictions);
                 }
@@ -699,5 +559,4 @@ function reconstructTeam() {
         console.log('+-------------------------');
 
     }
-
-};
+}
