@@ -72,6 +72,8 @@ const replacements = [ "DST", "DST", "TE", "QB", "WR", "TE", "RB", "DST" ]
 
 ### Final Team Example
 
+`team.json`
+
 ```javascript
 +-----------------------------------+
 | final team  {
