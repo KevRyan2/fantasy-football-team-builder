@@ -59,7 +59,15 @@ A file named `team.json` will be saved in the project.
 Remove players from the team builder by adding them to the bench array.
 
 ```javascript
-const bench = [ "Christian McCaffrey", "Michael Thomas" ]
+const bench = [ 'Christian McCaffrey', 'Michael Thomas' ]
+```
+
+### Salary Buffer
+
+The salary buffer stops the team building process when the total salary used reaches this number.
+
+```javascript
+const salaryBuffer = -100
 ```
 
 ### Rebuilding a Team
@@ -67,7 +75,7 @@ const bench = [ "Christian McCaffrey", "Michael Thomas" ]
 The first time the team is built, if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
 
 ```javascript
-const replacements = [ "DST", "DST", "TE", "QB", "WR", "TE", "RB", "DST" ]
+const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
 ```
 
 ### Final Team Example
@@ -76,95 +84,21 @@ const replacements = [ "DST", "DST", "TE", "QB", "WR", "TE", "RB", "DST" ]
 
 ```javascript
 +-----------------------------------+
-| final team  {
-  qb1: {
-    name: 'Lamar Jackson',
-    salary: 8100,
-    position: 'QB',
-    team: 'BAL',
-    points: 0,
-    avgpoints: 29.85,
-    value: 271.356783919598
-  },
-  rb1: {
-    name: 'Mark Ingram II',
-    salary: 5500,
-    position: 'RB',
-    team: 'BAL',
-    points: 0,
-    avgpoints: 16.29,
-    value: 337.6304481276857
-  },
-  rb2: {
-    name: 'Austin Ekeler',
-    salary: 7000,
-    position: 'RB',
-    team: 'LAC',
-    points: 0,
-    avgpoints: 20.19,
-    value: 346.70629024269437
-  },
-  wr1: {
-    name: 'Davante Adams',
-    salary: 7300,
-    position: 'WR',
-    team: 'GB',
-    points: 0,
-    avgpoints: 20.96,
-    value: 348.28244274809157
-  },
-  wr2: {
-    name: 'DeAndre Hopkins',
-    salary: 6800,
-    position: 'WR',
-    team: 'ARI',
-    points: 0,
-    avgpoints: 19.08,
-    value: 356.39412997903565
-  },
-  wr3: {
-    name: 'Marvin Jones Jr.',
-    salary: 5500,
-    position: 'WR',
-    team: 'DET',
-    points: 0,
-    avgpoints: 15.38,
-    value: 357.6072821846554
-  },
-  te1: {
-    name: 'Jacob Hollister',
-    salary: 3000,
-    position: 'TE',
-    team: 'SEA',
-    points: 0,
-    avgpoints: 8.25,
-    value: 363.6363636363636
-  },
-  fx1: {
-    name: 'Jason Witten',
-    salary: 3200,
-    position: 'TE',
-    team: 'LV',
-    points: 0,
-    avgpoints: 8.81,
-    value: 363.22360953461975
-  },
-  dst1: {
-    name: '49ers',
-    salary: 3500,
-    position: 'DST',
-    team: 'SF',
-    points: 0,
-    avgpoints: 10.16,
-    value: 344.48818897637796
-  },
-  totaldkpoints: 148,
-  salary: -100
-}
+| final team
++-----------------------------------+
+| qb  Lamar Jackson 8100
+| rb  Mark Ingram II 5500
+| rb  Austin Ekeler 7000
+| wr  Davante Adams 7300
+| wr  Davante Adams 7300
+| wr  Davante Adams 7300
+| te  Jacob Hollister 3000
+| flx  Jason Witten 3200
+| dst  49ers 3500
 +------------------------+----------+
-| allowed salary         | 50000
-| total salary           | 49900
-| over salary            | -100
-| total dk avg points    | 148
+| draftkings salary      | 50000
+| total salary used      | 49900
+| under salary           | -100
+| total points predicted | 148
 +------------------------+----------+
 ```
