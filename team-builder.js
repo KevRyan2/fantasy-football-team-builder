@@ -456,8 +456,8 @@ function createTeam(array) {
         console.log('| rb ', finalteam.rb1.name, finalteam.rb1.salary);
         console.log('| rb ', finalteam.rb2.name, finalteam.rb2.salary);
         console.log('| wr ', finalteam.wr1.name, finalteam.wr1.salary);
-        console.log('| wr ', finalteam.wr1.name, finalteam.wr1.salary);
-        console.log('| wr ', finalteam.wr1.name, finalteam.wr1.salary);
+        console.log('| wr ', finalteam.wr2.name, finalteam.wr2.salary);
+        console.log('| wr ', finalteam.wr3.name, finalteam.wr3.salary);
         console.log('| te ', finalteam.te1.name, finalteam.te1.salary);
         console.log('| flx ', finalteam.fx1.name, finalteam.fx1.salary);
         console.log('| dst ', finalteam.dst1.name, finalteam.dst1.salary);

@@ -90,8 +90,8 @@ const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
 | rb  Mark Ingram II 5500
 | rb  Austin Ekeler 7000
 | wr  Davante Adams 7300
-| wr  Davante Adams 7300
-| wr  Davante Adams 7300
+| wr  DeAndre Hopkins 6800
+| wr  Marvin Jones Jr. 5500
 | te  Jacob Hollister 3000
 | flx  Jason Witten 3200
 | dst  49ers 3500
