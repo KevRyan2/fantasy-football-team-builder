@@ -62,6 +62,14 @@ Remove players from the team builder by adding them to the bench array.
 const bench = [ 'Christian McCaffrey', 'Michael Thomas' ]
 ```
 
+### Salary
+
+Set the maximum salary allowed to build a team.
+
+```javascript
+const allowedSalary = 50000
+```
+
 ### Salary Buffer
 
 The salary buffer stops the team building process when the total salary used reaches this number.
@@ -78,7 +86,7 @@ The first time the team is built, if it is over the salary cap, the team will be
 const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
 ```
 
-### Final Team Example
+### Final Team Output
 
 `team.json`
 
