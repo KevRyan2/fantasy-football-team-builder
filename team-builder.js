@@ -5,7 +5,7 @@ const bench = []; // remove these players from predictions
 const predictions = []; // list of players sorted by value to build a team from
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -100;
-const replacements = [ // order of player replacemetns when rebuilding
+const replacements = [ // order of player replacements when rebuilding
     'DST',
     'DST',
     'DST',
@@ -151,6 +151,9 @@ function predict() {
         }
     }
 
+    console.log('+------------------------+');
+    console.log('| building team          |');
+    console.log('+------------------------+');
     createTeam(predictions);
 }
 
@@ -447,13 +450,22 @@ function createTeam(array) {
             if (err) throw err;
         });
         console.log('+-----------------------------------+');
-        console.log('| final team ', finalteam);
+        console.log('| final team ');
+        console.log('+-----------------------------------+');
+        console.log('| qb ', finalteam.qb1.name, finalteam.qb1.salary);
+        console.log('| rb ', finalteam.rb1.name, finalteam.rb1.salary);
+        console.log('| rb ', finalteam.rb2.name, finalteam.rb2.salary);
+        console.log('| wr ', finalteam.wr1.name, finalteam.wr1.salary);
+        console.log('| wr ', finalteam.wr1.name, finalteam.wr1.salary);
+        console.log('| wr ', finalteam.wr1.name, finalteam.wr1.salary);
+        console.log('| te ', finalteam.te1.name, finalteam.te1.salary);
+        console.log('| flx ', finalteam.fx1.name, finalteam.fx1.salary);
+        console.log('| dst ', finalteam.dst1.name, finalteam.dst1.salary);
         console.log('+------------------------+----------+');
-        console.log('| allowed salary         |', allowedSalary);
-        console.log('| total salary           |', totalSalary);
-        console.log('| over salary            |', overSalary);
-        // console.log('| total predicted points |', finalteam.totalpoints);
-        console.log('| total dk avg points    |', finalteam.totaldkpoints);
+        console.log('| draftkings salary      |', allowedSalary);
+        console.log('| total salary used      |', totalSalary);
+        console.log('| under salary           |', overSalary);
+        console.log('| total points predicted |', finalteam.totaldkpoints);
         console.log('+------------------------+----------+');
 
     }
@@ -463,10 +475,6 @@ function createTeam(array) {
 // if over salary, begin replacing players
 // ---------------------------------------------------------------------------------
 function rebuildTeam() {
-    console.log('+------------------------+');
-    console.log('| rebuilding team        |');
-    console.log('+------------------------+');
-    console.log('replacements[' + replacement + '] = ' + replacements[replacement]);
 
     if (replacements[replacement] === 'DST') {
 
@@ -549,10 +557,6 @@ function rebuildTeam() {
         }
 
     } else {
-
-        // ---------------------------------------------------------------------------------
-        // unable to build team
-        // ---------------------------------------------------------------------------------
 
         console.log('+-------------------------');
         console.log('| unable to build team   |');
