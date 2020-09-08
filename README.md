@@ -97,8 +97,6 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
-### Options
-
 #### Build a Team
 
 ```bash
@@ -106,6 +104,8 @@ node team-builder.js
 ```
 
 A file named `team.json` will be saved in the project.
+
+### Options
 
 #### Bench
 
@@ -149,7 +149,7 @@ const useFanduel = false
 
 #### Rebuilding a Team
 
-The first time the team is built, if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
+When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
 
 ```javascript
 const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
