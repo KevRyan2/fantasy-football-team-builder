@@ -353,6 +353,10 @@ function createTeam(array) {
             team: '',
             avgpoints: 0,
             value: 1000
+        },
+        total: {
+            salary: 0,
+            avgpoints: 0
         }
     };
 
@@ -512,12 +516,17 @@ function createTeam(array) {
     } else {
 
         let finalteam = team;
+        let totalsalary = 0;
         let totalavg = 0;
         for (const property in finalteam) {
+            let salary = finalteam[property].salary;
+            totalsalary += salary;
             let avgpointsvalue = finalteam[property].avgpoints;
             totalavg += avgpointsvalue;
         }
-        const totalPredictedPoints = parseInt(totalavg.toFixed(2));
+        // const totalPredictedPoints = parseInt(totalavg.toFixed(2));
+        finalteam.total.salary = totalsalary;
+        finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
         let jsondata = JSON.stringify(finalteam);
         fs.writeFile('./team.json', jsondata, function (err) {
             if (err) throw err;
@@ -526,7 +535,7 @@ function createTeam(array) {
         console.log('| draftkings salary      |', allowedSalary);
         console.log('| total salary used      |', totalSalary);
         console.log('| under salary           |', overSalary);
-        console.log('| total points predicted |', totalPredictedPoints);
+        console.log('| total points predicted |', finalteam.total.avgpoints);
         console.log('+------------------------+----------+');
         console.table(finalteam);
     }

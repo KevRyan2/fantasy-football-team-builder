@@ -97,7 +97,7 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
-#### Build a Team
+### Build a Team
 
 ```bash
 node team-builder.js
@@ -117,7 +117,7 @@ const bench = [ 'Christian McCaffrey', 'Michael Thomas' ]
 
 #### Total Points Target
 
-Once a team is built with this value, it will stop. Otherwise, it will keep trying.
+Team build will continue to rebuild the team until this value is met or it fails.
 
 ```javascript
 const pointsTarget = 150
@@ -133,7 +133,7 @@ const allowedSalary = 50000
 
 #### Salary Buffer
 
-The salary buffer stops the team building process when the total salary used reaches this number.
+The salary buffer is how much you are willing NOT to spend on salary.
 
 ```javascript
 const salaryBuffer = -100
@@ -147,7 +147,7 @@ Set this to true if you want to merge FanDuel data with Draftkings data to calcu
 const useFanduel = false
 ```
 
-#### Rebuilding a Team
+#### Replacements
 
 When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
 
@@ -172,5 +172,6 @@ const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
 │   te1   │ 'Austin Hooper'  │  5100  │   'TE'   │ 'CLE' │   15.21   │  407.92523819155   │
 │   fx1   │  'Will Dissly'   │  3400  │   'TE'   │ 'SEA' │   12.32   │ 373.5639304010294  │
 │  dst1   │    'Patriots'    │  3200  │  'DST'   │ 'NE'  │   13.71   │ 275.32382605196307 │
+│  total  │                  │ 49100  │          │       │    160    │                    │
 └─────────┴──────────────────┴────────┴──────────┴───────┴───────────┴────────────────────┘
 ```
