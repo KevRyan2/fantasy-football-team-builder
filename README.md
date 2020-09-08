@@ -46,7 +46,60 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
-### Build a Team
+### (Optional) FanDuel Data
+
+Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `fanduel.json` and save it in the project directory.
+
+`fanduel.json` should look similar to this:
+
+```javascript
+[
+    {
+        "Player ID + Player Name": "47691-55050:Christian McCaffrey",
+        "Id": "47691-55050",
+        "Position": "RB",
+        "First Name": "Christian",
+        "Nickname": "Christian McCaffrey",
+        "Last Name": "McCaffrey",
+        "FPPG": 25.82500076,
+        "Played": 16,
+        "Salary": 10000,
+        "Game": "LV@CAR",
+        "Team": "CAR",
+        "Opponent": "LV",
+        "Injury Indicator": "",
+        "Injury Details": "",
+        "Tier": "",
+        "": "",
+        "__1": "",
+        "__2": ""
+    },
+    {
+        "Player ID + Player Name": "47691-63115:Lamar Jackson",
+        "Id": "47691-63115",
+        "Position": "QB",
+        "First Name": "Lamar",
+        "Nickname": "Lamar Jackson",
+        "Last Name": "Jackson",
+        "FPPG": 28.11199951,
+        "Played": 15,
+        "Salary": 9400,
+        "Game": "CLE@BAL",
+        "Team": "BAL",
+        "Opponent": "CLE",
+        "Injury Indicator": "",
+        "Injury Details": "",
+        "Tier": "",
+        "": "",
+        "__1": "",
+        "__2": ""
+    }
+]
+```
+
+### Options
+
+#### Build a Team
 
 ```bash
 node team-builder.js
@@ -54,7 +107,7 @@ node team-builder.js
 
 A file named `team.json` will be saved in the project.
 
-### Bench
+#### Bench
 
 Remove players from the team builder by adding them to the bench array.
 
@@ -62,7 +115,7 @@ Remove players from the team builder by adding them to the bench array.
 const bench = [ 'Christian McCaffrey', 'Michael Thomas' ]
 ```
 
-### Total Points Target
+#### Total Points Target
 
 Once a team is built with this value, it will stop. Otherwise, it will keep trying.
 
@@ -70,7 +123,7 @@ Once a team is built with this value, it will stop. Otherwise, it will keep tryi
 const pointsTarget = 150
 ```
 
-### Salary
+#### Salary
 
 Set the maximum salary allowed to build a team.
 
@@ -78,7 +131,7 @@ Set the maximum salary allowed to build a team.
 const allowedSalary = 50000
 ```
 
-### Salary Buffer
+#### Salary Buffer
 
 The salary buffer stops the team building process when the total salary used reaches this number.
 
@@ -86,7 +139,7 @@ The salary buffer stops the team building process when the total salary used rea
 const salaryBuffer = -100
 ```
 
-### Incorporate FanDuel data
+#### Incorporate FanDuel data
 
 Set this to true if you want to merge FanDuel data with Draftkings data to calculate player values.
 
@@ -94,7 +147,7 @@ Set this to true if you want to merge FanDuel data with Draftkings data to calcu
 const useFanduel = false
 ```
 
-### Rebuilding a Team
+#### Rebuilding a Team
 
 The first time the team is built, if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
 
