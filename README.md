@@ -62,6 +62,14 @@ Remove players from the team builder by adding them to the bench array.
 const bench = [ 'Christian McCaffrey', 'Michael Thomas' ]
 ```
 
+### Total Points Target
+
+Once a team is built with this value, it will stop. Otherwise, it will keep trying.
+
+```javascript
+const pointsTarget = 150
+```
+
 ### Salary
 
 Set the maximum salary allowed to build a team.
@@ -78,6 +86,14 @@ The salary buffer stops the team building process when the total salary used rea
 const salaryBuffer = -100
 ```
 
+### Incorporate FanDuel data
+
+Set this to true if you want to merge FanDuel data with Draftkings data to calculate player values.
+
+```javascript
+const useFanduel = false
+```
+
 ### Rebuilding a Team
 
 The first time the team is built, if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
@@ -91,22 +107,17 @@ const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
 `team.json`
 
 ```javascript
-+-----------------------------------+
-| final team
-+-----------------------------------+
-| qb  Lamar Jackson 8100
-| rb  Mark Ingram II 5500
-| rb  Austin Ekeler 7000
-| wr  Davante Adams 7300
-| wr  DeAndre Hopkins 6800
-| wr  Marvin Jones Jr. 5500
-| te  Jacob Hollister 3000
-| flx  Jason Witten 3200
-| dst  49ers 3500
-+------------------------+----------+
-| draftkings salary      | 50000
-| total salary used      | 49900
-| under salary           | -100
-| total points predicted | 148
-+------------------------+----------+
+┌─────────┬──────────────────┬────────┬──────────┬───────┬───────────┬────────────────────┐
+│ (index) │       name       │ salary │ position │ team  │ avgpoints │       value        │
+├─────────┼──────────────────┼────────┼──────────┼───────┼───────────┼────────────────────┤
+│   qb1   │ 'Jameis Winston' │  5500  │   'QB'   │ 'NO'  │   23.34   │ 260.9532562807786  │
+│   rb1   │   'Wes Hills'    │  4000  │   'RB'   │ 'DET' │   16.2    │ 271.48310776325945 │
+│   rb2   │  'Aaron Jones'   │  6900  │   'RB'   │ 'GB'  │   21.09   │ 378.5346979432975  │
+│   wr1   │ 'DeSean Jackson' │  4900  │   'WR'   │ 'PHI' │   13.3    │ 360.13644398840074 │
+│   wr2   │  'Chris Godwin'  │  7100  │   'WR'   │ 'TB'  │   21.01   │ 400.1983836165706  │
+│   wr3   │ 'Michael Thomas' │  9000  │   'WR'   │ 'NO'  │   24.62   │ 417.36669483913516 │
+│   te1   │ 'Austin Hooper'  │  5100  │   'TE'   │ 'CLE' │   15.21   │  407.92523819155   │
+│   fx1   │  'Will Dissly'   │  3400  │   'TE'   │ 'SEA' │   12.32   │ 373.5639304010294  │
+│  dst1   │    'Patriots'    │  3200  │  'DST'   │ 'NE'  │   13.71   │ 275.32382605196307 │
+└─────────┴──────────────────┴────────┴──────────┴───────┴───────────┴────────────────────┘
 ```
