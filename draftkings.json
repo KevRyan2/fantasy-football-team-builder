@@ -441,6 +441,17 @@
     },
     {
         "Position": "RB",
+        "Name + ID": "Leonard Fournette (15033507)",
+        "Name": "Leonard Fournette",
+        "ID": 15033507,
+        "Roster Position": "RB/FLEX",
+        "Salary": 6000,
+        "Game Info": "TB@NO 09/13/2020 04:25PM ET",
+        "TeamAbbrev": "TB",
+        "AvgPointsPerGame": 17.96
+    },
+    {
+        "Position": "RB",
         "Name + ID": "James White (15033509)",
         "Name": "James White",
         "ID": 15033509,
@@ -482,17 +493,6 @@
         "Game Info": "IND@JAX 09/13/2020 01:00PM ET",
         "TeamAbbrev": "IND",
         "AvgPointsPerGame": 17.66
-    },
-    {
-        "Position": "RB",
-        "Name + ID": "Leonard Fournette (15033507)",
-        "Name": "Leonard Fournette",
-        "ID": 15033507,
-        "Roster Position": "RB/FLEX",
-        "Salary": 6000,
-        "Game Info": "IND@JAX 09/13/2020 01:00PM ET",
-        "TeamAbbrev": "JAX",
-        "AvgPointsPerGame": 17.96
     },
     {
         "Position": "TE",
@@ -1441,6 +1441,17 @@
         "AvgPointsPerGame": 10.73
     },
     {
+        "Position": "RB",
+        "Name + ID": "Adrian Peterson (15033553)",
+        "Name": "Adrian Peterson",
+        "ID": 15033553,
+        "Roster Position": "RB/FLEX",
+        "Salary": 4500,
+        "Game Info": "CHI@DET 09/13/2020 01:00PM ET",
+        "TeamAbbrev": "DET",
+        "AvgPointsPerGame": 10.33
+    },
+    {
         "Position": "WR",
         "Name + ID": "Preston Williams (15033895)",
         "Name": "Preston Williams",
@@ -1483,17 +1494,6 @@
         "Game Info": "TB@NO 09/13/2020 04:25PM ET",
         "TeamAbbrev": "TB",
         "AvgPointsPerGame": 0
-    },
-    {
-        "Position": "RB",
-        "Name + ID": "Adrian Peterson (15033553)",
-        "Name": "Adrian Peterson",
-        "ID": 15033553,
-        "Roster Position": "RB/FLEX",
-        "Salary": 4500,
-        "Game Info": "PHI@WAS 09/13/2020 01:00PM ET",
-        "TeamAbbrev": "WAS",
-        "AvgPointsPerGame": 10.33
     },
     {
         "Position": "QB",
@@ -1826,6 +1826,17 @@
         "AvgPointsPerGame": 0
     },
     {
+        "Position": "RB",
+        "Name + ID": "Lynn Bowden Jr. (15033577)",
+        "Name": "Lynn Bowden Jr.",
+        "ID": 15033577,
+        "Roster Position": "RB/FLEX",
+        "Salary": 4200,
+        "Game Info": "MIA@NE 09/13/2020 01:00PM ET",
+        "TeamAbbrev": "MIA",
+        "AvgPointsPerGame": 0
+    },
+    {
         "Position": "TE",
         "Name + ID": "T.J. Hockenson (15034327)",
         "Name": "T.J. Hockenson",
@@ -1901,17 +1912,6 @@
         "Game Info": "IND@JAX 09/13/2020 01:00PM ET",
         "TeamAbbrev": "IND",
         "AvgPointsPerGame": 8.83
-    },
-    {
-        "Position": "RB",
-        "Name + ID": "Lynn Bowden Jr. (15033577)",
-        "Name": "Lynn Bowden Jr.",
-        "ID": 15033577,
-        "Roster Position": "RB/FLEX",
-        "Salary": 4200,
-        "Game Info": "LV@CAR 09/13/2020 01:00PM ET",
-        "TeamAbbrev": "LV",
-        "AvgPointsPerGame": 0
     },
     {
         "Position": "WR",
@@ -2043,6 +2043,17 @@
         "Salary": 4100,
         "Game Info": "ARI@SF 09/13/2020 04:25PM ET",
         "TeamAbbrev": "SF",
+        "AvgPointsPerGame": 0
+    },
+    {
+        "Position": "RB",
+        "Name + ID": "Jason Huntley (15033677)",
+        "Name": "Jason Huntley",
+        "ID": 15033677,
+        "Roster Position": "RB/FLEX",
+        "Salary": 4000,
+        "Game Info": "PHI@WAS 09/13/2020 01:00PM ET",
+        "TeamAbbrev": "PHI",
         "AvgPointsPerGame": 0
     },
     {
@@ -2208,17 +2219,6 @@
         "Salary": 4000,
         "Game Info": "CHI@DET 09/13/2020 01:00PM ET",
         "TeamAbbrev": "CHI",
-        "AvgPointsPerGame": 0
-    },
-    {
-        "Position": "RB",
-        "Name + ID": "Jason Huntley (15033677)",
-        "Name": "Jason Huntley",
-        "ID": 15033677,
-        "Roster Position": "RB/FLEX",
-        "Salary": 4000,
-        "Game Info": "CHI@DET 09/13/2020 01:00PM ET",
-        "TeamAbbrev": "DET",
         "AvgPointsPerGame": 0
     },
     {
@@ -6315,6 +6315,17 @@
     },
     {
         "Position": "TE",
+        "Name + ID": "Noah Togiai (15034525)",
+        "Name": "Noah Togiai",
+        "ID": 15034525,
+        "Roster Position": "TE/FLEX",
+        "Salary": 2500,
+        "Game Info": "IND@JAX 09/13/2020 01:00PM ET",
+        "TeamAbbrev": "IND",
+        "AvgPointsPerGame": 0
+    },
+    {
+        "Position": "TE",
         "Name + ID": "Chris Myarick (15034495)",
         "Name": "Chris Myarick",
         "ID": 15034495,
@@ -6587,17 +6598,6 @@
         "Game Info": "PHI@WAS 09/13/2020 01:00PM ET",
         "TeamAbbrev": "PHI",
         "AvgPointsPerGame": 3.95
-    },
-    {
-        "Position": "TE",
-        "Name + ID": "Noah Togiai (15034525)",
-        "Name": "Noah Togiai",
-        "ID": 15034525,
-        "Roster Position": "TE/FLEX",
-        "Salary": 2500,
-        "Game Info": "PHI@WAS 09/13/2020 01:00PM ET",
-        "TeamAbbrev": "PHI",
-        "AvgPointsPerGame": 0
     },
     {
         "Position": "TE",

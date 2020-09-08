@@ -3,14 +3,15 @@ const dataDK = require('./draftkings.json'); // update this file weekly with csv
 const dataFD = require('./fanduel.json'); // update this file weekly with csv data from fanduel website
 const draftkings = [...dataDK];
 const fanduel = [...dataFD];
-const useFanduel = true; // use fanduel data to average the value of draftkings data of each player
-const bench = ['Christian McCaffrey']; // remove these players from team building
-const players = []; // list of players sorted by value to build a team from
+const useFanDuel = true; // use fanduel data to average the value of draftkings data of each player
+const bench = ['Wes Hills', 'Duke Williams']; // remove these players from team building
+const players = []; // array of players sorted by value to build a team from
+const waivers = []; // array of players removed from the team
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
 const pointsTarget = 150; // total player points of entire team aiming for
 const replacements = [ // order of player replacements when rebuilding
-    'WR',
+    'RB',
     'DST',
     'DST',
     'DST',
@@ -57,6 +58,11 @@ const replacements = [ // order of player replacements when rebuilding
     'DST',
     'DST',
     'DST',
+    'DST',
+    'QB',
+    'RB',
+    'TE',
+    'WR',
     'DST'
 ];
 
@@ -73,7 +79,7 @@ function predict() {
     for (i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'QB') {
             if (draftkings[i].AvgPointsPerGame > 0) {
-                this.prediction = {
+                this.player = {
                     name: draftkings[i].Name,
                     points: 0,
                     salary: draftkings[i].Salary,
@@ -82,19 +88,19 @@ function predict() {
                     avgpoints: draftkings[i].AvgPointsPerGame,
                     value: draftkings[i].Salary / draftkings[i].AvgPointsPerGame
                 };
-                if (useFanduel) {
+                if (useFanDuel) {
                     for (let j = 0; j < fanduel.length; j++) {
-                        if (fanduel[j].Nickname === this.prediction.name) {
+                        if (fanduel[j].Nickname === this.player.name) {
                             if (fanduel[j].FPPG > 0) {
                                 const fppg = fanduel[j].FPPG;
                                 const fsalary = fanduel[j].Salary;
                                 const fdvalue = fsalary / fppg;
-                                this.prediction.value = (this.prediction.value + fdvalue) / 2;
+                                this.player.value = (this.player.value + fdvalue) / 2;
                             }
                         }
                     }
                 }
-                players.push(this.prediction);
+                players.push(this.player);
             }
         }
     }
@@ -108,7 +114,7 @@ function predict() {
     for (i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'RB') {
             if (draftkings[i].AvgPointsPerGame > 0) {
-                this.prediction = {
+                this.player = {
                     name: draftkings[i].Name,
                     points: 0,
                     salary: draftkings[i].Salary,
@@ -117,19 +123,19 @@ function predict() {
                     avgpoints: draftkings[i].AvgPointsPerGame,
                     value: draftkings[i].Salary / draftkings[i].AvgPointsPerGame
                 };
-                if (useFanduel) {
+                if (useFanDuel) {
                     for (let j = 0; j < fanduel.length; j++) {
-                        if (fanduel[j].Nickname === this.prediction.name) {
+                        if (fanduel[j].Nickname === this.player.name) {
                             if (fanduel[j].FPPG > 0) {
                                 const fppg = fanduel[j].FPPG;
                                 const fsalary = fanduel[j].Salary;
                                 const fdvalue = fsalary / fppg;
-                                this.prediction.value = (this.prediction.value + fdvalue) / 2;
+                                this.player.value = (this.player.value + fdvalue) / 2;
                             }
                         }
                     }
                 }
-                players.push(this.prediction);
+                players.push(this.player);
             }
         }
     }
@@ -143,7 +149,7 @@ function predict() {
     for (i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'WR') {
             if (draftkings[i].AvgPointsPerGame > 0) {
-                this.prediction = {
+                this.player = {
                     name: draftkings[i].Name,
                     points: 0,
                     salary: draftkings[i].Salary,
@@ -152,19 +158,19 @@ function predict() {
                     avgpoints: draftkings[i].AvgPointsPerGame,
                     value: draftkings[i].Salary / draftkings[i].AvgPointsPerGame
                 };
-                if (useFanduel) {
+                if (useFanDuel) {
                     for (let j = 0; j < fanduel.length; j++) {
-                        if (fanduel[j].Nickname === this.prediction.name) {
+                        if (fanduel[j].Nickname === this.player.name) {
                             if (fanduel[j].FPPG > 0) {
                                 const fppg = fanduel[j].FPPG;
                                 const fsalary = fanduel[j].Salary;
                                 const fdvalue = fsalary / fppg;
-                                this.prediction.value = (this.prediction.value + fdvalue) / 2;
+                                this.player.value = (this.player.value + fdvalue) / 2;
                             }
                         }
                     }
                 }
-                players.push(this.prediction);
+                players.push(this.player);
             }
         }
     }
@@ -178,7 +184,7 @@ function predict() {
     for (i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'TE') {
             if (draftkings[i].AvgPointsPerGame > 0) {
-                this.prediction = {
+                this.player = {
                     name: draftkings[i].Name,
                     points: 0,
                     salary: draftkings[i].Salary,
@@ -187,19 +193,19 @@ function predict() {
                     avgpoints: draftkings[i].AvgPointsPerGame,
                     value: draftkings[i].Salary / draftkings[i].AvgPointsPerGame
                 };
-                if (useFanduel) {
+                if (useFanDuel) {
                     for (let j = 0; j < fanduel.length; j++) {
-                        if (fanduel[j].Nickname === this.prediction.name) {
+                        if (fanduel[j].Nickname === this.player.name) {
                             if (fanduel[j].FPPG > 0) {
                                 const fppg = fanduel[j].FPPG;
                                 const fsalary = fanduel[j].Salary;
                                 const fdvalue = fsalary / fppg;
-                                this.prediction.value = (this.prediction.value + fdvalue) / 2;
+                                this.player.value = (this.player.value + fdvalue) / 2;
                             }
                         }
                     }
                 }
-                players.push(this.prediction);
+                players.push(this.player);
             }
         }
     }
@@ -213,7 +219,7 @@ function predict() {
     for (i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'DST') {
             if (draftkings[i].AvgPointsPerGame > 0) {
-                this.prediction = {
+                this.player = {
                     name: draftkings[i].Name,
                     points: 0,
                     salary: draftkings[i].Salary,
@@ -222,7 +228,7 @@ function predict() {
                     avgpoints: draftkings[i].AvgPointsPerGame,
                     value: draftkings[i].Salary / draftkings[i].AvgPointsPerGame
                 };
-                if (useFanduel) {
+                if (useFanDuel) {
                     for (let j = 0; j < fanduel.length; j++) {
                         if (fanduel[j].Position === 'D') {
                             if (fanduel[j].Team === draftkings[i].TeamAbbrev) {
@@ -230,13 +236,13 @@ function predict() {
                                     const fppg = fanduel[j].FPPG;
                                     const fsalary = fanduel[j].Salary;
                                     const fdvalue = fsalary / fppg;
-                                    this.prediction.value = (this.prediction.value + fdvalue) / 2;
+                                    this.player.value = (this.player.value + fdvalue) / 2;
                                 }
                             }
                         }
                     }
                 }
-                players.push(this.prediction);
+                players.push(this.player);
             }
         }
     }
@@ -274,6 +280,8 @@ if (bench.length) {
 // build a team
 // ---------------------------------------------------------------------------------
 function createTeam(array) {
+
+    // check for players in the waiver array who match
 
     // sort players array by value (salary / avgpoints)
     array.sort((a, b) => (a.value > b.value) ? 1 : -1);
@@ -503,41 +511,86 @@ function createTeam(array) {
 
     if (underPoints > 0) {
 
+        console.log('+-------------------------');
+        console.log('| rebuilding team        |');
+        console.log('+-------------------------');
         rebuildTeam();
 
     } else if (overSalary > 0) {
 
+        console.log('+-------------------------');
+        console.log('| rebuilding team        |');
+        console.log('+-------------------------');
         rebuildTeam();
 
     } else if (overSalary < salaryBuffer) {
 
+        console.log('+-------------------------');
+        console.log('| rebuilding team        |');
+        console.log('+-------------------------');
         rebuildTeam();
 
     } else {
 
-        let finalteam = team;
-        let totalsalary = 0;
-        let totalavg = 0;
-        for (const property in finalteam) {
-            let salary = finalteam[property].salary;
-            totalsalary += salary;
-            let avgpointsvalue = finalteam[property].avgpoints;
-            totalavg += avgpointsvalue;
+        console.log('+-------------------------');
+        console.log('| checking waivers       |');
+        console.log('+-------------------------');
+        let freeagent = false;
+        for (const i in team) {
+            for (let j = waivers.length - 1; j >= 0; j--) {
+                if (waivers[j].position === team[i].position) {
+                    if (waivers[j].value < team[i].value) {
+                        if (waivers[j].salary > team[i].salary) {
+                            if (waivers[j].avgpoints > team[i].avgpoints) {
+                                if (waivers[j].salary < (team[i].salary + (overSalary * -1))) {
+                                    // console.log('pull off waivers: ', waivers[j].name);
+                                    players.push(waivers[j]);
+                                    waivers.splice(j, 1);
+                                    freeagent = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        // const totalPredictedPoints = parseInt(totalavg.toFixed(2));
-        finalteam.total.salary = totalsalary;
-        finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
-        let jsondata = JSON.stringify(finalteam);
-        fs.writeFile('./team.json', jsondata, function (err) {
-            if (err) throw err;
-        });
-        console.log('+------------------------+----------+');
-        console.log('| draftkings salary      |', allowedSalary);
-        console.log('| total salary used      |', totalSalary);
-        console.log('| under salary           |', overSalary);
-        console.log('| total points predicted |', finalteam.total.avgpoints);
-        console.log('+------------------------+----------+');
-        console.table(finalteam);
+
+        if (freeagent) {
+
+            console.log('+-------------------------');
+            console.log('| rebuilding team        |');
+            console.log('+-------------------------');
+            rebuildTeam();
+
+        } else {
+
+            let finalteam = team;
+            let totalsalary = 0;
+            let totalavg = 0;
+            for (const property in finalteam) {
+                let salary = finalteam[property].salary;
+                totalsalary += salary;
+                let avgpointsvalue = finalteam[property].avgpoints;
+                totalavg += avgpointsvalue;
+            }
+            finalteam.total.salary = totalsalary;
+            finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
+            let jsondata = JSON.stringify(finalteam);
+            fs.writeFile('./team.json', jsondata, function (err) {
+                if (err) throw err;
+            });
+            console.log('+------------------------+----------+');
+            console.log('| draftkings salary      |', allowedSalary);
+            console.log('| total salary used      |', totalSalary);
+            console.log('| under salary           |', overSalary);
+            console.log('| total points predicted |', finalteam.total.avgpoints);
+            console.log('+------------------------+----------+');
+            console.log('| waivers')
+            console.table(waivers);
+            console.log('| final team')
+            console.table(finalteam);
+
+        }
     }
 }
 
@@ -552,7 +605,8 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'DST') {
-                    console.log('removing ', players[i].name);
+                    // console.log('removing ', players[i].name);
+                    waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
                     replacement++;
@@ -568,7 +622,8 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'TE') {
-                    console.log('removing ', players[i].name);
+                    // console.log('removing ', players[i].name);
+                    waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
                     replacement++;
@@ -584,7 +639,8 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'QB') {
-                    console.log('removing ', players[i].name);
+                    // console.log('removing ', players[i].name);
+                    waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
                     replacement++;
@@ -600,7 +656,8 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'WR') {
-                    console.log('removing ', players[i].name);
+                    // console.log('removing ', players[i].name);
+                    waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
                     replacement++;
@@ -616,7 +673,8 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'RB') {
-                    console.log('removing ', players[i].name);
+                    // console.log('removing ', players[i].name);
+                    waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
                     replacement++;

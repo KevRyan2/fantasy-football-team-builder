@@ -4,7 +4,7 @@ Automatically build a team for DraftKings.
 
 ## About
 
-The team builder uses weekly game data provided by DraftKings to generate a full team within the salary cap. It places a 'value' on each player according to their salary versus average points per game.
+The team builder uses weekly game data provided by DraftKings to generate a full team within the salary cap. It places a 'value' on each player according to their salary versus average points per game. In this case, the lower the value the better.
 
 ## Installation and Usage
 
@@ -152,7 +152,20 @@ const useFanduel = false
 When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
 
 ```javascript
-const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
+const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST', 'QB', 'TE' ]
+```
+
+#### Waivers
+
+Once a player is removed they are placed in the waivers array. When the team is finally assembled, the waivers array will be checked to optimize the team. If a value player is found, they will be taken off waivers and the team will be rebuilt. If no value players are found, the final waivers list will display along with the final team.
+
+```javascript
+┌─────────┬───────────────────────┬────────┬────────┬──────────┬───────┬───────────┬────────────────────┐
+│ (index) │         name          │ points │ salary │ position │ team  │ avgpoints │       value        │
+├─────────┼───────────────────────┼────────┼────────┼──────────┼───────┼───────────┼────────────────────┤
+│    0    │ 'Christian McCaffrey' │   0    │ 10000  │   'RB'   │ 'CAR' │   30.95   │ 355.1617250393066  │
+│    1    │      'Patriots'       │   0    │  3200  │  'DST'   │ 'NE'  │   13.71   │ 275.32382605196307 │
+└─────────┴───────────────────────┴────────┴────────┴──────────┴───────┴───────────┴────────────────────┘
 ```
 
 ### Final Team Output
@@ -164,14 +177,14 @@ const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST' ]
 │ (index) │       name       │ salary │ position │ team  │ avgpoints │       value        │
 ├─────────┼──────────────────┼────────┼──────────┼───────┼───────────┼────────────────────┤
 │   qb1   │ 'Jameis Winston' │  5500  │   'QB'   │ 'NO'  │   23.34   │ 260.9532562807786  │
-│   rb1   │   'Wes Hills'    │  4000  │   'RB'   │ 'DET' │   16.2    │ 271.48310776325945 │
-│   rb2   │  'Aaron Jones'   │  6900  │   'RB'   │ 'GB'  │   21.09   │ 378.5346979432975  │
+│   rb1   │  'Aaron Jones'   │  6900  │   'RB'   │ 'GB'  │   21.09   │ 378.5346979432975  │
+│   rb2   │ 'Mark Ingram II' │  5500  │   'RB'   │ 'BAL' │   16.29   │ 397.57339399848337 │
 │   wr1   │ 'DeSean Jackson' │  4900  │   'WR'   │ 'PHI' │   13.3    │ 360.13644398840074 │
 │   wr2   │  'Chris Godwin'  │  7100  │   'WR'   │ 'TB'  │   21.01   │ 400.1983836165706  │
 │   wr3   │ 'Michael Thomas' │  9000  │   'WR'   │ 'NO'  │   24.62   │ 417.36669483913516 │
 │   te1   │ 'Austin Hooper'  │  5100  │   'TE'   │ 'CLE' │   15.21   │  407.92523819155   │
 │   fx1   │  'Will Dissly'   │  3400  │   'TE'   │ 'SEA' │   12.32   │ 373.5639304010294  │
-│  dst1   │    'Patriots'    │  3200  │  'DST'   │ 'NE'  │   13.71   │ 275.32382605196307 │
-│  total  │                  │ 49100  │          │       │    160    │                    │
+│  dst1   │   'Buccaneers'   │  2200  │  'DST'   │ 'TB'  │   8.56    │ 350.4024831161744  │
+│  total  │                  │ 49600  │          │       │    155    │                    │
 └─────────┴──────────────────┴────────┴──────────┴───────┴───────────┴────────────────────┘
 ```
