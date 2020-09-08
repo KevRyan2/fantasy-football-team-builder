@@ -3,13 +3,13 @@ const dataDK = require('./draftkings.json'); // update this file weekly with csv
 const dataFD = require('./fanduel.json'); // update this file weekly with csv data from fanduel website
 const draftkings = [...dataDK];
 const fanduel = [...dataFD];
-const useFanDuel = true; // use fanduel data to average the value of draftkings data of each player
-const bench = ['Wes Hills', 'Duke Williams']; // remove these players from team building
+const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
+const bench = ['Christian McCaffrey', 'Wes Hills', 'Duke Williams']; // remove these players from team building
 const players = []; // array of players sorted by value to build a team from
 const waivers = []; // array of players removed from the team
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
-const pointsTarget = 150; // total player points of entire team aiming for
+const pointsTarget = 140; // total player points of entire team aiming for
 const replacements = [ // order of player replacements when rebuilding
     'RB',
     'DST',
@@ -564,31 +564,41 @@ function createTeam(array) {
 
         } else {
 
-            let finalteam = team;
-            let totalsalary = 0;
-            let totalavg = 0;
-            for (const property in finalteam) {
-                let salary = finalteam[property].salary;
-                totalsalary += salary;
-                let avgpointsvalue = finalteam[property].avgpoints;
-                totalavg += avgpointsvalue;
+            if (overSalary < -500) {
+
+                console.log('+-------------------------');
+                console.log('| still under salary cap |');
+                console.log('+-------------------------');
+                console.log('+-------------------------');
+                console.log('| rebuilding team        |');
+                console.log('+-------------------------');
+                rebuildTeam();
+
+            } else {
+
+                let finalteam = team;
+                let totalsalary = 0;
+                let totalavg = 0;
+                for (const property in finalteam) {
+                    let salary = finalteam[property].salary;
+                    totalsalary += salary;
+                    let avgpointsvalue = finalteam[property].avgpoints;
+                    totalavg += avgpointsvalue;
+                }
+                finalteam.total.salary = totalsalary;
+                finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
+                let jsondata = JSON.stringify(finalteam);
+                fs.writeFile('./team.json', jsondata, function (err) {
+                    if (err) throw err;
+                });
+                console.log('| bench');
+                console.table(bench);
+                console.log('| waivers')
+                console.table(waivers);
+                console.log('| final team')
+                console.table(finalteam);
+
             }
-            finalteam.total.salary = totalsalary;
-            finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
-            let jsondata = JSON.stringify(finalteam);
-            fs.writeFile('./team.json', jsondata, function (err) {
-                if (err) throw err;
-            });
-            console.log('+------------------------+----------+');
-            console.log('| draftkings salary      |', allowedSalary);
-            console.log('| total salary used      |', totalSalary);
-            console.log('| under salary           |', overSalary);
-            console.log('| total points predicted |', finalteam.total.avgpoints);
-            console.log('+------------------------+----------+');
-            console.log('| waivers')
-            console.table(waivers);
-            console.log('| final team')
-            console.table(finalteam);
 
         }
     }
