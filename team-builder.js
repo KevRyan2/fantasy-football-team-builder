@@ -1,76 +1,22 @@
 const fs = require('fs');
 const dataDK = require('./draftkings.json'); // update this file weekly with csv data from draftkings website
 const dataFD = require('./fanduel.json'); // update this file weekly with csv data from fanduel website
+const bench = require('./bench');
+const replacements = require('./replacements'); // order of player replacements when rebuilding
+
 const draftkings = [...dataDK];
 const fanduel = [...dataFD];
-const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
-const bench = [ // remove these players from team building
-    'Jameis Winston',
-    'Wes Hills',
-    'Duke Williams',
-    'Kyle Allen'
-];
 const players = []; // array of players sorted by value to build a team from
+const defenses = []; // array of defenses to sort by easiest to play against
 const waivers = []; // array of players removed from the team
+
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -5000; // amount under allowedSalary willing not to spend
 const pointsTarget = 50; // total player points of entire team aiming for
-const defenses = []; // array of defenses to sort by easiest to play against
 const adjustDSTValue = 50; // amount of value to adjust if playing weaker defenses
+const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
+
 let replacement = 0; // increments on each replacement
-const replacements = [ // order of player replacements when rebuilding
-    'WR',
-    'WR',
-    'DST',
-    'DST',
-    'DST',
-    'DST',
-    'WR',
-    'WR',
-    'DST',
-    'DST',
-    'TE',
-    'TE',
-    'TE',
-    'TE',
-    'TE',
-    'DST',
-    'DST',
-    'QB',
-    'QB',
-    'QB',
-    'WR',
-    'WR',
-    'WR',
-    'WR',
-    'WR',
-    'QB',
-    'QB',
-    'DST',
-    'DST',
-    'DST',
-    'DST',
-    'WR',
-    'QB',
-    'QB',
-    'WR',
-    'WR',
-    'DST',
-    'WR',
-    'TE',
-    'TE',
-    'WR',
-    'QB',
-    'DST',
-    'DST',
-    'DST',
-    'DST',
-    'QB',
-    'TE',
-    'TE',
-    'WR',
-    'DST'
-];
 
 // ---------------------------------------------------------------------------------
 // remove bench players and weak defenses
@@ -101,7 +47,7 @@ if (bench.length) {
 function filterDefenses() {
 
     console.log('+------------------------+');
-    console.log('| filter defenses        |');
+    console.log('| filtering defenses     |');
     console.log('+------------------------+');
     for (let i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'DST') {
