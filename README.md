@@ -13,7 +13,7 @@ The team builder uses weekly game data provided by DraftKings to generate a full
 ```bash
 npm init
 ```
-### DraftKings Data
+### DraftKings Data (Required)
 
 Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `draftkings.json` and save it in the project directory.
 
@@ -46,7 +46,7 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
-### (Optional) FanDuel Data
+### FanDuel Data (Required)
 
 Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `fanduel.json` and save it in the project directory.
 
