@@ -1,1 +1,86 @@
-{"qb1":{"name":"Matthew Stafford","salary":6200,"position":"QB","team":"DET","avgpoints":23.32,"value":265.8662092624357},"rb1":{"name":"Aaron Jones","salary":6900,"position":"RB","team":"GB","avgpoints":21.09,"value":327.16927453769557},"rb2":{"name":"Leonard Fournette","salary":6000,"position":"RB","team":"TB","avgpoints":17.96,"value":334.07572383073494},"wr1":{"name":"Chris Godwin","salary":7100,"position":"WR","team":"TB","avgpoints":21.01,"value":337.9343169919086},"wr2":{"name":"Davante Adams","salary":7300,"position":"WR","team":"GB","avgpoints":20.96,"value":348.28244274809157},"wr3":{"name":"DeAndre Hopkins","salary":6800,"position":"WR","team":"ARI","avgpoints":19.08,"value":356.39412997903565},"te1":{"name":"James O'Shaughnessy","salary":3000,"position":"TE","team":"JAX","avgpoints":8.26,"value":363.19612590799034},"fx1":{"name":"Will Dissly","salary":3400,"position":"TE","team":"SEA","avgpoints":12.32,"value":275.97402597402595},"dst1":{"name":"Patriots","salary":3200,"position":"DST","team":"NE","avgpoints":13.71,"value":233.4062727935813},"total":{"salary":49900,"avgpoints":157}}
+{
+    "qb1": {
+        "name": "Lamar Jackson",
+        "salary": 8100,
+        "position": "QB",
+        "team": "BAL",
+        "opponent": "CLE weak",
+        "avgpoints": 29.85,
+        "value": 221.356783919598
+    },
+    "rb1": {
+        "name": "Mark Ingram II",
+        "salary": 5500,
+        "position": "RB",
+        "team": "BAL",
+        "opponent": "CLE weak",
+        "avgpoints": 16.29,
+        "value": 287.6304481276857
+    },
+    "rb2": {
+        "name": "Chris Carson",
+        "salary": 6200,
+        "position": "RB",
+        "team": "SEA",
+        "opponent": "ATL weak",
+        "avgpoints": 16.97,
+        "value": 315.35061873895114
+    },
+    "wr1": {
+        "name": "DeSean Jackson",
+        "salary": 4900,
+        "position": "WR",
+        "team": "PHI",
+        "opponent": "WAS weak",
+        "avgpoints": 13.3,
+        "value": 318.4210526315789
+    },
+    "wr2": {
+        "name": "John Brown",
+        "salary": 5600,
+        "position": "WR",
+        "team": "BUF",
+        "opponent": "NYJ weak",
+        "avgpoints": 14.97,
+        "value": 324.0814963259853
+    },
+    "wr3": {
+        "name": "John Ross III",
+        "salary": 4200,
+        "position": "WR",
+        "team": "CIN",
+        "opponent": "LAC",
+        "avgpoints": 12.75,
+        "value": 329.4117647058824
+    },
+    "te1": {
+        "name": "Will Dissly",
+        "salary": 3400,
+        "position": "TE",
+        "team": "SEA",
+        "opponent": "ATL weak",
+        "avgpoints": 12.32,
+        "value": 225.97402597402595
+    },
+    "fx1": {
+        "name": "Christian McCaffrey",
+        "salary": 10000,
+        "position": "RB",
+        "team": "CAR",
+        "opponent": "LV",
+        "avgpoints": 30.95,
+        "value": 323.10177705977384
+    },
+    "dst1": {
+        "name": "Jets",
+        "salary": 2100,
+        "position": "DST",
+        "team": "NYJ",
+        "avgpoints": 8.38,
+        "value": 250.59665871121717
+    },
+    "total": {
+        "salary": 50000,
+        "avgpoints": 155
+    }
+}
