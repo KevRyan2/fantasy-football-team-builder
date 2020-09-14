@@ -139,6 +139,14 @@ The salary buffer is how much you are willing NOT to spend on salary.
 const salaryBuffer = -100
 ```
 
+#### Weak Defenses
+
+Players playing weak defenses can be given a better value. The number will be subtracted from their initial value and will lead them to be drafted higher.
+
+```javascript
+const adjustDSTValue = 50;
+```
+
 #### Incorporate FanDuel data
 
 Set this to true if you want to merge FanDuel data with Draftkings data to calculate player values.
