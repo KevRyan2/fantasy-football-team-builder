@@ -109,10 +109,10 @@ A file named `team.json` will be saved in the project.
 
 #### Bench
 
-Remove players from the team builder by adding them to the bench array.
+Remove players from the team builder by adding them to the bench array in `bench.js`.
 
 ```javascript
-const bench = [ 'Christian McCaffrey', 'Michael Thomas' ]
+[ 'Christian McCaffrey', 'Michael Thomas' ]
 ```
 
 #### Total Points Target
@@ -149,10 +149,10 @@ const useFanduel = false
 
 #### Replacements
 
-When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
+When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array in `replacements.js`.
 
 ```javascript
-const replacements = [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST', 'QB', 'TE' ]
+[ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST', 'QB', 'TE' ]
 ```
 
 #### Waivers
