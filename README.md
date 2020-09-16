@@ -31,17 +31,6 @@ Download the player data in CSV format from their site and convert it to JSON wi
         "Game Info": "LV@CAR 09/13/2020 01:00PM ET",
         "TeamAbbrev": "CAR",
         "AvgPointsPerGame": 30.95
-    },
-    {
-        "Position": "WR",
-        "Name + ID": "Michael Thomas (15033799)",
-        "Name": "Michael Thomas",
-        "ID": 15033799,
-        "Roster Position": "WR/FLEX",
-        "Salary": 9000,
-        "Game Info": "TB@NO 09/13/2020 04:25PM ET",
-        "TeamAbbrev": "NO",
-        "AvgPointsPerGame": 24.62
     }
 ]
 ```
@@ -67,26 +56,6 @@ Download the player data in CSV format from their site and convert it to JSON wi
         "Game": "LV@CAR",
         "Team": "CAR",
         "Opponent": "LV",
-        "Injury Indicator": "",
-        "Injury Details": "",
-        "Tier": "",
-        "": "",
-        "__1": "",
-        "__2": ""
-    },
-    {
-        "Player ID + Player Name": "47691-63115:Lamar Jackson",
-        "Id": "47691-63115",
-        "Position": "QB",
-        "First Name": "Lamar",
-        "Nickname": "Lamar Jackson",
-        "Last Name": "Jackson",
-        "FPPG": 28.11199951,
-        "Played": 15,
-        "Salary": 9400,
-        "Game": "CLE@BAL",
-        "Team": "BAL",
-        "Opponent": "CLE",
         "Injury Indicator": "",
         "Injury Details": "",
         "Tier": "",
