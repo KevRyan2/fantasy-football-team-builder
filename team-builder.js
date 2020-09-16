@@ -1,7 +1,7 @@
 const fs = require('fs');
 const dataDK = require('./data/draftkings.json'); // update this file weekly with csv data from draftkings website
 const dataFD = require('./data/fanduel.json'); // update this file weekly with csv data from fanduel website
-const bench = require('./bench');
+const bench = require('./bench'); // array of players to keep off of the team
 const replacements = require('./replacements'); // order of player replacements when rebuilding
 
 const draftkings = [...dataDK];
@@ -19,7 +19,7 @@ const useFanDuel = false; // use fanduel data to average the value of draftkings
 let replacement = 0; // increments on each replacement
 
 // ---------------------------------------------------------------------------------
-// remove bench players and weak defenses
+// remove bench players
 // ---------------------------------------------------------------------------------
 if (bench.length) {
     console.log('+------------------------+');
@@ -78,7 +78,7 @@ function filterDefenses() {
 function predict() {
 
     // ---------------------------------------------------------------------------------
-    // loop over draftkings data for qb data
+    // loop over data for qb data
     // ---------------------------------------------------------------------------------
     console.log('+------------------------+');
     console.log('| training quarterbacks  |');
@@ -139,7 +139,7 @@ function predict() {
     }
 
     // ---------------------------------------------------------------------------------
-    // loop over draftkings data for rb data
+    // loop over data for rb data
     // ---------------------------------------------------------------------------------
     console.log('+------------------------+');
     console.log('| training runningbacks  |');
@@ -200,7 +200,7 @@ function predict() {
     }
 
     // ---------------------------------------------------------------------------------
-    // loop over draftkings data for wr data
+    // loop over data for wr data
     // ---------------------------------------------------------------------------------
     console.log('+------------------------+');
     console.log('| training widereceivers |');
@@ -261,7 +261,7 @@ function predict() {
     }
 
     // ---------------------------------------------------------------------------------
-    // loop over draftkings data for te data
+    // loop over data for te data
     // ---------------------------------------------------------------------------------
     console.log('+------------------------+');
     console.log('| training tightends     |');
@@ -322,7 +322,7 @@ function predict() {
     }
 
     // ---------------------------------------------------------------------------------
-    // loop over draftkings data for dst data
+    // loop over data for dst data
     // ---------------------------------------------------------------------------------
     console.log('+------------------------+');
     console.log('| training defenses      |');

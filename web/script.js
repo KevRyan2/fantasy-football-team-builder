@@ -2,7 +2,7 @@ $(function () {
 
     $(document).ready(function () {
 
-        console.log('script.js is ready');
+        console.log('this web version is a work in progress');
 
     });
 
