@@ -23,12 +23,8 @@ Download the player data in CSV format from their site and convert it to JSON wi
 [
     {
         "Position": "RB",
-        "Name + ID": "Christian McCaffrey (15033483)",
         "Name": "Christian McCaffrey",
-        "ID": 15033483,
-        "Roster Position": "RB/FLEX",
         "Salary": 10000,
-        "Game Info": "LV@CAR 09/13/2020 01:00PM ET",
         "TeamAbbrev": "CAR",
         "AvgPointsPerGame": 30.95
     }
@@ -44,24 +40,12 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ```javascript
 [
     {
-        "Player ID + Player Name": "47691-55050:Christian McCaffrey",
-        "Id": "47691-55050",
         "Position": "RB",
-        "First Name": "Christian",
         "Nickname": "Christian McCaffrey",
-        "Last Name": "McCaffrey",
         "FPPG": 25.82500076,
-        "Played": 16,
         "Salary": 10000,
-        "Game": "LV@CAR",
         "Team": "CAR",
-        "Opponent": "LV",
-        "Injury Indicator": "",
-        "Injury Details": "",
-        "Tier": "",
-        "": "",
-        "__1": "",
-        "__2": ""
+        "Opponent": "LV"
     }
 ]
 ```
