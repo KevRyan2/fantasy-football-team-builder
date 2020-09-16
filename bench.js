@@ -1,6 +1,7 @@
 module.exports = [
-    'Jameis Winston',
-    'Wes Hills',
-    'Duke Williams',
-    'Kyle Allen'
+    'Andy Dalton',
+    'Leonard Fournette',
+    'Ryan Fitzpatrick',
+    'Jeff Driskel',
+    'Deebo Samuel'
 ];

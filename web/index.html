@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="fantasy-football-team-builder">
+    <meta name="author" content="iniguezdj">
+
+    <title>Fantasy Football - Team Builder</title>
+
+    <link href="favicon.ico" rel="icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link href='./../node_modules/@fortawesome/fontawesome-free/css/all.css' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="navbar-brand" href="#">
+            <img src="logo.png" width="50" height="50" class="d-inline-block align-middle rounded" alt=""
+                style="margin-right:10px;">
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 offset-xl-1 py-5">
+                <div class="jumbotron" style="background-color:#000;color:#fff;">
+                    <h2 class="display-5" style="text-align:center;">
+                        <i class="fas fa-football-ball"></i>
+                        <br>Fantasy Football
+                        <br>Team Builder
+                    </h2>
+                </div>
+                <h6>The team builder uses weekly game data provided by DraftKings and Fanduel to generate a full team
+                    within the
+                    salary cap. It places a 'value' on each player according to their salary versus average points per
+                    game. In this case, the lower the value the better.
+                </h6>
+                <br>
+                <div class="alert alert-secondary text-center" role="alert">
+                    Current Data is for Week 1
+                </div>
+                </br>
+                <div class="form-check mb-3">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" value="">
+                        Include FanDuel data
+                    </label>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg btn-block"><i
+                                class="fas fa-layer-group"></i>&nbsp;&nbsp;Build Team</button>
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+                <br>
+                <br>
+                <table class="table" style="font-size:11px;">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Position</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Team</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">QB</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">RB</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">RB</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">WR</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">WR</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">WR</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">TE</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">FLEX</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">DST</th>
+                            <td>John Smith</td>
+                            <td>BAL</td>
+                            <td>7200</td>
+                            <td>16.5</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Total</th>
+                            <td></td>
+                            <td></td>
+                            <td>49500</td>
+                            <td>146</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <ul class="list-group" style="font-size:11px;">
+                            <li class="list-group-item list-group-item-danger">
+                                <strong>BENCH</strong>
+                                <br>
+                                <em>Remove players from the team builder by adding them to this list.</em>
+                            </li>
+                            <li class="list-group-item list-group-item-danger">Ryan Fitzpatrick</li>
+                            <li class="list-group-item list-group-item-danger">Larry Fitzgerald</li>
+                            <li class="list-group-item list-group-item-danger">Desean Jackson</li>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Player name"
+                                    aria-label="Player name" aria-describedby="name"
+                                    style="border-top-left-radius:0;font-size:11px;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" style="border-top-right-radius:0;">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </ul>
+                        <ul class="mylist" style="z-index: 1; top: 474px; left: 228px; display: none; width: 324px;">
+                            <li class="ui-menu-item" role="menuitem">
+                                <a class="ui-all" tabindex="-1">
+                                    United States
+                                </a>
+                            </li>
+                            <li class="ui-menu-item" role="menuitem">
+                                <a class="ui-all" tabindex="-1">
+                                    Canada
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col">
+                        <ul class="list-group" style="font-size:11px;">
+                            <li class="list-group-item list-group-item-warning">
+                                <strong>REPLACEMENTS</strong>
+                                <br>
+                                <em>When a team is built, if it does not meet the total points target or if it is over
+                                    the salary cap, the team will be rebuilt by removing a player by position.</em>
+                            </li>
+                            <li class="list-group-item list-group-item-warning">WR</li>
+                            <li class="list-group-item list-group-item-warning">DST</li>
+                            <li class="list-group-item list-group-item-warning">DST</li>
+                            <li class="list-group-item list-group-item-warning">TE</li>
+                            <li class="list-group-item list-group-item-warning">QB</li>
+                            <li class="list-group-item list-group-item-warning">QB</li>
+                            <li class="list-group-item list-group-item-warning">DST</li>
+                            <li class="list-group-item list-group-item-warning">DST</li>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Position" aria-label="Position"
+                                    aria-describedby="position" style="border-top-left-radius:0;font-size:11px;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" style="border-top-right-radius:0;">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h5><i class="fas fa-code-branch"></i>&nbsp;&nbsp;Source Code</h5>
+                <p>The code for this app can be found
+                    <a href="https://github.com/iniguezdj/fantasy-football-team-builder">here.
+                    </a>
+                <p>
+            </div>
+        </div>
+        <div class="row">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"
+        integrity="sha256-dHf/YjH1A4tewEsKUSmNnV05DDbfGN3g7NMq86xgGh8=" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

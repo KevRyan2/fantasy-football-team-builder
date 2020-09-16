@@ -1,6 +1,6 @@
 const fs = require('fs');
-const dataDK = require('./draftkings.json'); // update this file weekly with csv data from draftkings website
-const dataFD = require('./fanduel.json'); // update this file weekly with csv data from fanduel website
+const dataDK = require('./../data/draftkings.json'); // update this file weekly with csv data from draftkings website
+const dataFD = require('./../data/fanduel.json'); // update this file weekly with csv data from fanduel website
 const bench = require('./bench');
 const replacements = require('./replacements'); // order of player replacements when rebuilding
 
@@ -12,7 +12,7 @@ const waivers = []; // array of players removed from the team
 
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -5000; // amount under allowedSalary willing not to spend
-const pointsTarget = 50; // total player points of entire team aiming for
+const pointsTarget = 100; // total player points of entire team aiming for
 const adjustDSTValue = 50; // amount of value to adjust if playing weaker defenses
 const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
 
@@ -93,7 +93,8 @@ function predict() {
                 team: null,
                 opponent: null,
                 avgpoints: null,
-                value: null
+                value: null,
+                fd: null
             };
             if (draftkings[i].AvgPointsPerGame > 0) {
                 player.name = draftkings[i].Name;
@@ -111,7 +112,7 @@ function predict() {
                     }
                 }
 
-                // adjust value since playing weaker dst
+                // adjust value if playing weaker dst
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
                         player.value = player.value - adjustDSTValue;
@@ -122,7 +123,7 @@ function predict() {
                 if (useFanDuel) {
                     for (let m = 0; m < fanduel.length; m++) {
                         if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG > 0) {
+                            if (fanduel[m].FPPG >= 0) {
                                 const fppg = fanduel[m].FPPG;
                                 const fsalary = fanduel[m].Salary;
                                 const fdvalue = fsalary / fppg;
@@ -153,7 +154,8 @@ function predict() {
                 team: null,
                 opponent: null,
                 avgpoints: null,
-                value: null
+                value: null,
+                fd: null
             };
             if (draftkings[i].AvgPointsPerGame > 0) {
                 player.name = draftkings[i].Name;
@@ -171,7 +173,7 @@ function predict() {
                     }
                 }
 
-                // adjust value since playing weaker dst
+                // adjust value if playing weaker dst
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
                         player.value = player.value - adjustDSTValue;
@@ -182,7 +184,7 @@ function predict() {
                 if (useFanDuel) {
                     for (let m = 0; m < fanduel.length; m++) {
                         if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG > 0) {
+                            if (fanduel[m].FPPG >= 0) {
                                 const fppg = fanduel[m].FPPG;
                                 const fsalary = fanduel[m].Salary;
                                 const fdvalue = fsalary / fppg;
@@ -213,7 +215,8 @@ function predict() {
                 team: null,
                 opponent: null,
                 avgpoints: null,
-                value: null
+                value: null,
+                fd: null
             };
             if (draftkings[i].AvgPointsPerGame > 0) {
                 player.name = draftkings[i].Name;
@@ -231,7 +234,7 @@ function predict() {
                     }
                 }
 
-                // adjust value since playing weaker dst
+                // adjust value if playing weaker dst
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
                         player.value = player.value - adjustDSTValue;
@@ -242,7 +245,7 @@ function predict() {
                 if (useFanDuel) {
                     for (let m = 0; m < fanduel.length; m++) {
                         if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG > 0) {
+                            if (fanduel[m].FPPG >= 0) {
                                 const fppg = fanduel[m].FPPG;
                                 const fsalary = fanduel[m].Salary;
                                 const fdvalue = fsalary / fppg;
@@ -273,7 +276,8 @@ function predict() {
                 team: null,
                 opponent: null,
                 avgpoints: null,
-                value: null
+                value: null,
+                fd: null
             };
             if (draftkings[i].AvgPointsPerGame > 0) {
                 player.name = draftkings[i].Name;
@@ -291,7 +295,7 @@ function predict() {
                     }
                 }
 
-                // adjust value since playing weaker dst
+                // adjust value if playing weaker dst
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
                         player.value = player.value - adjustDSTValue;
@@ -302,7 +306,7 @@ function predict() {
                 if (useFanDuel) {
                     for (let m = 0; m < fanduel.length; m++) {
                         if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG > 0) {
+                            if (fanduel[m].FPPG >= 0) {
                                 const fppg = fanduel[m].FPPG;
                                 const fsalary = fanduel[m].Salary;
                                 const fdvalue = fsalary / fppg;
@@ -697,12 +701,11 @@ function createTeam(array) {
                 finalteam.total.salary = totalsalary;
                 finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
                 let jsondata = JSON.stringify(finalteam);
+
                 fs.writeFile('./team.json', jsondata, function (err) {
                     if (err) throw err;
                 });
 
-                // console.log('| players');
-                // console.table(players);
                 console.log('| bench');
                 console.table(bench);
                 console.log('| waivers');
