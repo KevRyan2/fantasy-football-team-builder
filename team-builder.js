@@ -71,20 +71,20 @@ function filterDefenses() {
 
     defenses.splice(0, 15); // keep the worst defenses
 
-    predict();
+    findValue();
 
 }
 
-function predict() {
+function findValue() {
 
     // ---------------------------------------------------------------------------------
-    // loop over data for qb data
+    // loop over player data and organize by value
     // ---------------------------------------------------------------------------------
     console.log('+------------------------+');
-    console.log('| training quarterbacks  |');
+    console.log('| finding player value   |');
     console.log('+------------------------+');
     for (i = 0; i < draftkings.length; i++) {
-        if (draftkings[i].Position === 'QB') {
+        if ((draftkings[i].Position === 'QB') || (draftkings[i].Position === 'RB') || (draftkings[i].Position === 'WR') || (draftkings[i].Position === 'TE')) {
             let player = {
                 name: null,
                 points: null,
@@ -116,7 +116,7 @@ function predict() {
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
                         player.value = player.value - adjustDSTValue;
-                        player.opponent = player.opponent + ' weak';
+                        player.opponent = player.opponent + ' (weak)';
                     }
                 }
 
@@ -139,193 +139,10 @@ function predict() {
     }
 
     // ---------------------------------------------------------------------------------
-    // loop over data for rb data
+    // loop over defense data and organize by value
     // ---------------------------------------------------------------------------------
     console.log('+------------------------+');
-    console.log('| training runningbacks  |');
-    console.log('+------------------------+');
-    for (i = 0; i < draftkings.length; i++) {
-        if (draftkings[i].Position === 'RB') {
-            let player = {
-                name: null,
-                points: null,
-                salary: null,
-                position: null,
-                team: null,
-                opponent: null,
-                avgpoints: null,
-                value: null,
-                fd: null
-            };
-            if (draftkings[i].AvgPointsPerGame > 0) {
-                player.name = draftkings[i].Name;
-                player.points = 0;
-                player.salary = draftkings[i].Salary;
-                player.position = draftkings[i].Position;
-                player.team = draftkings[i].TeamAbbrev;
-                player.avgpoints = draftkings[i].AvgPointsPerGame;
-                player.value = draftkings[i].Salary / draftkings[i].AvgPointsPerGame;
-
-                // get opponent from fanduel data
-                for (let j = 0; j < fanduel.length; j++) {
-                    if (player.name === fanduel[j].Nickname) {
-                        player.opponent = fanduel[j].Opponent;
-                    }
-                }
-
-                // adjust value if playing weaker dst
-                for (let k = 0; k < defenses.length; k++) {
-                    if (player.opponent === defenses[k].team) {
-                        player.value = player.value - adjustDSTValue;
-                        player.opponent = player.opponent + ' weak';
-                    }
-                }
-
-                if (useFanDuel) {
-                    for (let m = 0; m < fanduel.length; m++) {
-                        if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG >= 0) {
-                                const fppg = fanduel[m].FPPG;
-                                const fsalary = fanduel[m].Salary;
-                                const fdvalue = fsalary / fppg;
-                                player.value = (player.value + fdvalue) / 2;
-                                player.fd = 'x';
-                            }
-                        }
-                    }
-                }
-                players.push(player);
-            }
-        }
-    }
-
-    // ---------------------------------------------------------------------------------
-    // loop over data for wr data
-    // ---------------------------------------------------------------------------------
-    console.log('+------------------------+');
-    console.log('| training widereceivers |');
-    console.log('+------------------------+');
-    for (i = 0; i < draftkings.length; i++) {
-        if (draftkings[i].Position === 'WR') {
-            let player = {
-                name: null,
-                points: null,
-                salary: null,
-                position: null,
-                team: null,
-                opponent: null,
-                avgpoints: null,
-                value: null,
-                fd: null
-            };
-            if (draftkings[i].AvgPointsPerGame > 0) {
-                player.name = draftkings[i].Name;
-                player.points = 0;
-                player.salary = draftkings[i].Salary;
-                player.position = draftkings[i].Position;
-                player.team = draftkings[i].TeamAbbrev;
-                player.avgpoints = draftkings[i].AvgPointsPerGame;
-                player.value = draftkings[i].Salary / draftkings[i].AvgPointsPerGame;
-
-                // get opponent from fanduel data
-                for (let j = 0; j < fanduel.length; j++) {
-                    if (player.name === fanduel[j].Nickname) {
-                        player.opponent = fanduel[j].Opponent;
-                    }
-                }
-
-                // adjust value if playing weaker dst
-                for (let k = 0; k < defenses.length; k++) {
-                    if (player.opponent === defenses[k].team) {
-                        player.value = player.value - adjustDSTValue;
-                        player.opponent = player.opponent + ' weak';
-                    }
-                }
-
-                if (useFanDuel) {
-                    for (let m = 0; m < fanduel.length; m++) {
-                        if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG >= 0) {
-                                const fppg = fanduel[m].FPPG;
-                                const fsalary = fanduel[m].Salary;
-                                const fdvalue = fsalary / fppg;
-                                player.value = (player.value + fdvalue) / 2;
-                                player.fd = 'x';
-                            }
-                        }
-                    }
-                }
-                players.push(player);
-            }
-        }
-    }
-
-    // ---------------------------------------------------------------------------------
-    // loop over data for te data
-    // ---------------------------------------------------------------------------------
-    console.log('+------------------------+');
-    console.log('| training tightends     |');
-    console.log('+------------------------+');
-    for (i = 0; i < draftkings.length; i++) {
-        if (draftkings[i].Position === 'TE') {
-            let player = {
-                name: null,
-                points: null,
-                salary: null,
-                position: null,
-                team: null,
-                opponent: null,
-                avgpoints: null,
-                value: null,
-                fd: null
-            };
-            if (draftkings[i].AvgPointsPerGame > 0) {
-                player.name = draftkings[i].Name;
-                player.points = 0;
-                player.salary = draftkings[i].Salary;
-                player.position = draftkings[i].Position;
-                player.team = draftkings[i].TeamAbbrev;
-                player.avgpoints = draftkings[i].AvgPointsPerGame;
-                player.value = draftkings[i].Salary / draftkings[i].AvgPointsPerGame;
-
-                // get opponent from fanduel data
-                for (let j = 0; j < fanduel.length; j++) {
-                    if (player.name === fanduel[j].Nickname) {
-                        player.opponent = fanduel[j].Opponent;
-                    }
-                }
-
-                // adjust value if playing weaker dst
-                for (let k = 0; k < defenses.length; k++) {
-                    if (player.opponent === defenses[k].team) {
-                        player.value = player.value - adjustDSTValue;
-                        player.opponent = player.opponent + ' weak';
-                    }
-                }
-
-                if (useFanDuel) {
-                    for (let m = 0; m < fanduel.length; m++) {
-                        if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG >= 0) {
-                                const fppg = fanduel[m].FPPG;
-                                const fsalary = fanduel[m].Salary;
-                                const fdvalue = fsalary / fppg;
-                                player.value = (player.value + fdvalue) / 2;
-                                player.fd = 'x';
-                            }
-                        }
-                    }
-                }
-                players.push(player);
-            }
-        }
-    }
-
-    // ---------------------------------------------------------------------------------
-    // loop over data for dst data
-    // ---------------------------------------------------------------------------------
-    console.log('+------------------------+');
-    console.log('| training defenses      |');
+    console.log('| finding defense value  |');
     console.log('+------------------------+');
     for (i = 0; i < draftkings.length; i++) {
         if (draftkings[i].Position === 'DST') {
@@ -656,7 +473,7 @@ function createTeam(array) {
                         if (waivers[j].salary > team[i].salary) {
                             if (waivers[j].avgpoints > team[i].avgpoints) {
                                 if (waivers[j].salary < (team[i].salary + (overSalary * -1))) {
-                                    // console.log('pull off waivers: ', waivers[j].name);
+                                    // pull off waivers
                                     players.push(waivers[j]);
                                     waivers.splice(j, 1);
                                     freeagent = true;
@@ -708,10 +525,10 @@ function createTeam(array) {
 
                 console.log('| bench');
                 console.table(bench);
-                console.log('| waivers');
-                console.table(waivers);
                 console.log('| defenses');
                 console.table(defenses);
+                console.log('| waivers');
+                console.table(waivers);
                 console.log('| final team');
                 console.table(finalteam);
 
@@ -732,7 +549,6 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'DST') {
-                    // console.log('removing ', players[i].name);
                     waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
@@ -749,7 +565,6 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'TE') {
-                    // console.log('removing ', players[i].name);
                     waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
@@ -766,7 +581,6 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'QB') {
-                    // console.log('removing ', players[i].name);
                     waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
@@ -783,7 +597,6 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'WR') {
-                    // console.log('removing ', players[i].name);
                     waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
@@ -800,7 +613,6 @@ function rebuildTeam() {
         for (i = 0; i < players.length; i++) {
             if (r === 0) {
                 if (players[i].position === 'RB') {
-                    // console.log('removing ', players[i].name);
                     waivers.push(players[i]);
                     players.splice(i, 1);
                     r++;
@@ -812,11 +624,6 @@ function rebuildTeam() {
         }
 
     } else {
-
-        // sort players array by value
-        // players.sort((a, b) => (a.value > b.value) ? 1 : -1);
-        // console.log('| players');
-        // console.table(players);
 
         console.log('| bench');
         console.table(bench);
