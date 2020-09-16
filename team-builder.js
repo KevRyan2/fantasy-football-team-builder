@@ -1,6 +1,6 @@
 const fs = require('fs');
-const dataDK = require('./../data/draftkings.json'); // update this file weekly with csv data from draftkings website
-const dataFD = require('./../data/fanduel.json'); // update this file weekly with csv data from fanduel website
+const dataDK = require('./data/draftkings.json'); // update this file weekly with csv data from draftkings website
+const dataFD = require('./data/fanduel.json'); // update this file weekly with csv data from fanduel website
 const bench = require('./bench');
 const replacements = require('./replacements'); // order of player replacements when rebuilding
 
