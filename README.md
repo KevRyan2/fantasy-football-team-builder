@@ -168,12 +168,11 @@ When a team is built, if it does not meet the total points target or if it is ov
 Once a player is removed they are placed in the waivers array. When the team is finally assembled, the waivers array will be checked to optimize the team. If a value player is found, they will be taken off waivers and the team will be rebuilt. If no value players are found, the final waivers list will display along with the final team.
 
 ```javascript
-┌─────────┬───────────────────────┬────────┬────────┬──────────┬───────┬───────────┬────────────────────┐
-│ (index) │         name          │ points │ salary │ position │ team  │ avgpoints │       value        │
-├─────────┼───────────────────────┼────────┼────────┼──────────┼───────┼───────────┼────────────────────┤
-│    0    │ 'Christian McCaffrey' │   0    │ 10000  │   'RB'   │ 'CAR' │   30.95   │ 355.1617250393066  │
-│    1    │      'Patriots'       │   0    │  3200  │  'DST'   │ 'NE'  │   13.71   │ 275.32382605196307 │
-└─────────┴───────────────────────┴────────┴────────┴──────────┴───────┴───────────┴────────────────────┘
+┌─────────┬──────────────┬────────┬──────────┬──────┬──────────────┬───────────┬───────┐
+│ (index) │     name     │ salary │ position │ team │   opponent   │ avgpoints │ value │
+├─────────┼──────────────┼────────┼──────────┼──────┼──────────────┼───────────┼───────┤
+│    0    │ 'Mike Evans' │  6400  │   'WR'   │ 'TB' │ 'CAR (weak)' │   18.59   │  294  │
+└─────────┴──────────────┴────────┴──────────┴──────┴──────────────┴───────────┴───────┘
 ```
 
 ### Final Team Output
@@ -181,18 +180,18 @@ Once a player is removed they are placed in the waivers array. When the team is 
 `team.json`
 
 ```javascript
-┌─────────┬──────────────────┬────────┬──────────┬───────┬───────────┬────────────────────┐
-│ (index) │       name       │ salary │ position │ team  │ avgpoints │       value        │
-├─────────┼──────────────────┼────────┼──────────┼───────┼───────────┼────────────────────┤
-│   qb1   │ 'Jameis Winston' │  5500  │   'QB'   │ 'NO'  │   23.34   │ 260.9532562807786  │
-│   rb1   │  'Aaron Jones'   │  6900  │   'RB'   │ 'GB'  │   21.09   │ 378.5346979432975  │
-│   rb2   │ 'Mark Ingram II' │  5500  │   'RB'   │ 'BAL' │   16.29   │ 397.57339399848337 │
-│   wr1   │ 'DeSean Jackson' │  4900  │   'WR'   │ 'PHI' │   13.3    │ 360.13644398840074 │
-│   wr2   │  'Chris Godwin'  │  7100  │   'WR'   │ 'TB'  │   21.01   │ 400.1983836165706  │
-│   wr3   │ 'Michael Thomas' │  9000  │   'WR'   │ 'NO'  │   24.62   │ 417.36669483913516 │
-│   te1   │ 'Austin Hooper'  │  5100  │   'TE'   │ 'CLE' │   15.21   │  407.92523819155   │
-│   fx1   │  'Will Dissly'   │  3400  │   'TE'   │ 'SEA' │   12.32   │ 373.5639304010294  │
-│  dst1   │   'Buccaneers'   │  2200  │  'DST'   │ 'TB'  │   8.56    │ 350.4024831161744  │
-│  total  │                  │ 49600  │          │       │    155    │                    │
-└─────────┴──────────────────┴────────┴──────────┴───────┴───────────┴────────────────────┘
+┌─────────┬───────────────────────┬────────┬──────────┬───────┬──────────────┬───────────┬───────┐
+│ (index) │         name          │ salary │ position │ team  │   opponent   │ avgpoints │ value │
+├─────────┼───────────────────────┼────────┼──────────┼───────┼──────────────┼───────────┼───────┤
+│   qb1   │    'Lamar Jackson'    │  8200  │   'QB'   │ 'BAL' │ 'HOU (weak)' │   29.85   │  224  │
+│   rb1   │   'Mark Ingram II'    │  5400  │   'RB'   │ 'BAL' │ 'HOU (weak)' │   16.29   │  281  │
+│   rb2   │     'Aaron Jones'     │  7100  │   'RB'   │ 'GB'  │ 'DET (weak)' │   21.09   │  286  │
+│   wr1   │    'Chris Godwin'     │  7000  │   'WR'   │ 'TB'  │ 'CAR (weak)' │   21.01   │  283  │
+│   wr2   │   'Michael Gallup'    │  5600  │   'WR'   │ 'DAL' │ 'ATL (weak)' │   16.05   │  298  │
+│   wr3   │   'Christian Kirk'    │  4300  │   'WR'   │ 'ARI' │    'WAS'     │   13.4    │  320  │
+│   te1   │ "James O'Shaughnessy" │  2700  │   'TE'   │ 'JAX' │    'TEN'     │   8.26    │  326  │
+│   fx1   │     'Dalvin Cook'     │  7600  │   'RB'   │ 'MIN' │ 'IND (weak)' │   21.62   │  301  │
+│  dst1   │        'Jets'         │  2000  │  'DST'   │ 'NYJ' │              │   8.38    │  238  │
+│  total  │                       │ 49900  │          │       │              │    155    │       │
+└─────────┴───────────────────────┴────────┴──────────┴───────┴──────────────┴───────────┴───────┘
 ```

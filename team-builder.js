@@ -87,18 +87,16 @@ function findValue() {
         if ((draftkings[i].Position === 'QB') || (draftkings[i].Position === 'RB') || (draftkings[i].Position === 'WR') || (draftkings[i].Position === 'TE')) {
             let player = {
                 name: null,
-                points: null,
                 salary: null,
                 position: null,
                 team: null,
                 opponent: null,
                 avgpoints: null,
                 value: null,
-                fd: null
+                // fd: null
             };
             if (draftkings[i].AvgPointsPerGame > 0) {
                 player.name = draftkings[i].Name;
-                player.points = 0;
                 player.salary = draftkings[i].Salary;
                 player.position = draftkings[i].Position;
                 player.team = draftkings[i].TeamAbbrev;
@@ -128,11 +126,12 @@ function findValue() {
                                 const fsalary = fanduel[m].Salary;
                                 const fdvalue = fsalary / fppg;
                                 player.value = (player.value + fdvalue) / 2;
-                                player.fd = 'x';
+                                // player.fd = 'x';
                             }
                         }
                     }
                 }
+                player.value = parseInt(player.value.toFixed(2));
                 players.push(player);
             }
         }
@@ -149,7 +148,6 @@ function findValue() {
             if (draftkings[i].AvgPointsPerGame > 0) {
                 this.player = {
                     name: draftkings[i].Name,
-                    points: 0,
                     salary: draftkings[i].Salary,
                     position: draftkings[i].Position,
                     team: draftkings[i].TeamAbbrev,
@@ -165,12 +163,13 @@ function findValue() {
                                     const fsalary = fanduel[j].Salary;
                                     const fdvalue = fsalary / fppg;
                                     this.player.value = (this.player.value + fdvalue) / 2;
-                                    this.player.fd = 'x';
+                                    // this.player.fd = 'x';
                                 }
                             }
                         }
                     }
                 }
+                player.value = parseInt(player.value.toFixed(2));
                 players.push(this.player);
             }
         }
@@ -295,7 +294,7 @@ function createTeam(array) {
                 team.rb1.opponent = array[i].opponent;
                 team.rb1.avgpoints = array[i].avgpoints;
                 team.rb1.value = array[i].value;
-                team.rb1.fd = array[i].fd;
+                // team.rb1.fd = array[i].fd;
             }
         }
 
@@ -310,7 +309,7 @@ function createTeam(array) {
                     team.rb2.opponent = array[i].opponent;
                     team.rb2.avgpoints = array[i].avgpoints;
                     team.rb2.value = array[i].value;
-                    team.rb2.fd = array[i].fd;
+                    // team.rb2.fd = array[i].fd;
                 }
             }
         }
@@ -325,7 +324,7 @@ function createTeam(array) {
                 team.wr1.opponent = array[i].opponent;
                 team.wr1.avgpoints = array[i].avgpoints;
                 team.wr1.value = array[i].value;
-                team.wr1.fd = array[i].fd;
+                // team.wr1.fd = array[i].fd;
             }
         }
 
@@ -339,7 +338,7 @@ function createTeam(array) {
                 team.qb1.opponent = array[i].opponent;
                 team.qb1.avgpoints = array[i].avgpoints;
                 team.qb1.value = array[i].value;
-                team.qb1.fd = array[i].fd;
+                // team.qb1.fd = array[i].fd;
             }
         }
 
@@ -354,7 +353,7 @@ function createTeam(array) {
                     team.wr2.opponent = array[i].opponent;
                     team.wr2.avgpoints = array[i].avgpoints;
                     team.wr2.value = array[i].value;
-                    team.wr2.fd = array[i].fd;
+                    // team.wr2.fd = array[i].fd;
                 }
             }
         }
@@ -371,7 +370,7 @@ function createTeam(array) {
                         team.wr3.opponent = array[i].opponent;
                         team.wr3.avgpoints = array[i].avgpoints;
                         team.wr3.value = array[i].value;
-                        team.wr3.fd = array[i].fd;
+                        // team.wr3.fd = array[i].fd;
                     }
                 }
             }
@@ -392,7 +391,7 @@ function createTeam(array) {
                                     team.fx1.opponent = array[i].opponent;
                                     team.fx1.avgpoints = array[i].avgpoints;
                                     team.fx1.value = array[i].value;
-                                    team.fx1.fd = array[i].fd;
+                                    // team.fx1.fd = array[i].fd;
                                 }
                             }
                         }
@@ -412,7 +411,7 @@ function createTeam(array) {
                     team.te1.opponent = array[i].opponent;
                     team.te1.avgpoints = array[i].avgpoints;
                     team.te1.value = array[i].value;
-                    team.te1.fd = array[i].fd;
+                    // team.te1.fd = array[i].fd;
                 }
             }
         }
@@ -426,7 +425,7 @@ function createTeam(array) {
                 team.dst1.team = array[i].team;
                 team.dst1.avgpoints = array[i].avgpoints;
                 team.dst1.value = array[i].value;
-                team.dst1.fd = array[i].fd;
+                // team.dst1.fd = array[i].fd;
             }
         }
 
