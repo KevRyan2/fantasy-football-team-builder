@@ -86,7 +86,7 @@ const allowedSalary = 50000
 
 #### Salary Buffer
 
-The salary buffer is how much you are willing NOT to spend on salary. For instance, if the salary cap is 50000, a team will continue to be rebuilt until the total salary spent is 49000.
+The salary buffer is how much you are willing NOT to spend on salary. For instance, if the salary cap is 50000, and the salaryBuffer is set to -100, the team will continue to be rebuilt until the total salary spent is 49000.
 
 ```javascript
 const salaryBuffer = -100
