@@ -10,11 +10,11 @@ const players = []; // array of players sorted by value to build a team from
 const defenses = []; // array of defenses to sort by easiest to play against
 const waivers = []; // array of players removed from the team
 
-const allowedSalary = 50000; // manually change if draftkings salary is different
-const salaryBuffer = -5000; // amount under allowedSalary willing not to spend
-const pointsTarget = 100; // total player points of entire team aiming for
-const adjustDSTValue = 50; // amount of value to adjust if playing weaker defenses
-const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
+const allowedSalary = 60000; // manually change if draftkings salary is different
+const salaryBuffer = -10000; // amount under allowedSalary willing not to spend
+const pointsTarget = 50; // total player points of entire team aiming for
+const adjustDSTValue = 126; // amount of value to adjust if playing weaker defenses
+const useFanDuel = true; // use fanduel data to average the value of draftkings data of each player
 
 let replacement = 0; // increments on each replacement
 
@@ -121,7 +121,7 @@ function findValue() {
                 if (useFanDuel) {
                     for (let m = 0; m < fanduel.length; m++) {
                         if (fanduel[m].Nickname === player.name) {
-                            if (fanduel[m].FPPG >= 0) {
+                            if (fanduel[m].FPPG > 0) {
                                 const fppg = fanduel[m].FPPG;
                                 const fsalary = fanduel[m].Salary;
                                 const fdvalue = fsalary / fppg;
@@ -493,11 +493,12 @@ function createTeam(array) {
 
         } else {
 
-            if (overSalary < -500) {
+            if (overSalary < salaryBuffer) {
 
                 console.log('+-------------------------');
                 console.log('| still under salary cap |');
                 console.log('+-------------------------');
+                console.table(team);
                 console.log('+-------------------------');
                 console.log('| rebuilding team        |');
                 console.log('+-------------------------');
@@ -634,6 +635,8 @@ function rebuildTeam() {
         console.log('+-------------------------');
         console.log('| unable to build team   |');
         console.log('+-------------------------');
+
+        console.table(this.team);
 
     }
 }
