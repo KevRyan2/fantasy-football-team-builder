@@ -6,7 +6,7 @@ Automatically build a team for DraftKings.
 
 The team builder uses weekly game data provided by DraftKings to generate a full team within the salary cap. It places a 'value' on each player according to their salary versus average points per game. In this case, the lower the value the better.
 
-[Demo](https://http://suirad.com/team-builder)
+[Demo](http://suirad.com/team-builder)
 
 ## Installation and Usage
 
