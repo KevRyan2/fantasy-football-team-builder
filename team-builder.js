@@ -10,10 +10,10 @@ const players = []; // array of players sorted by value to build a team from
 const defenses = []; // array of defenses to sort by easiest to play against
 const waivers = []; // array of players removed from the team
 
-const allowedSalary = 60000; // manually change if draftkings salary is different
-const salaryBuffer = -10000; // amount under allowedSalary willing not to spend
+const allowedSalary = 50000; // manually change if draftkings salary is different
+const salaryBuffer = -5000; // amount under allowedSalary willing not to spend
 const pointsTarget = 50; // total player points of entire team aiming for
-const adjustDSTValue = 126; // amount of value to adjust if playing weaker defenses
+const adjustDSTValue = 225; // amount of value to adjust if playing weaker defenses
 const useFanDuel = true; // use fanduel data to average the value of draftkings data of each player
 
 let replacement = 0; // increments on each replacement
