@@ -71,6 +71,24 @@ function filterDefenses() {
 
     defenses.splice(0, 15); // keep the worst defenses
 
+    // findValue();
+    removeWeakDefenses();
+
+}
+
+function removeWeakDefenses() {
+
+    console.log('+------------------------+');
+    console.log('| removing weak defenses |');
+    console.log('+------------------------+');
+    for (let i = draftkings.length - 1; i >= 0; i--) {
+        for (let j = 0; j < defenses.length; j++) {
+            if (draftkings[i] && (draftkings[i].Name === defenses[j].name)) {
+                draftkings.splice(i, 1);
+            }
+        }
+    }
+
     findValue();
 
 }
