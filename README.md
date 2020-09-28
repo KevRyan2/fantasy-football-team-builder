@@ -52,6 +52,26 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
+### Yahoo Data (Required)
+
+Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `yahoo.json` and save it in the project directory.
+
+`yahoo.json` should look similar to this:
+
+```javascript
+[
+    {
+        "Position": "RB",
+        "First Name": "Christian",
+        "Last Name": "McCaffrey",
+        "FPPG": 25.8,
+        "Salary": 20,
+        "Team": "CAR",
+        "Opponent": "LV"
+    }
+]
+```
+
 ### Build a Team
 
 ```bash
@@ -110,6 +130,22 @@ Set this to true if you want to merge FanDuel data with Draftkings data to calcu
 const useFanduel = false
 ```
 
+#### Incorporate Yahoo data
+
+Set this to true if you want to merge Yahoo data with Draftkings data to calculate player values.
+
+```javascript
+const useYahoo = false
+```
+
+#### Allow Weak Defenses
+
+Set this to true if you want to allow weak defenses to be drafted to the team.
+
+```javascript
+const useFanduel = false
+```
+
 #### Replacements
 
 When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array in `replacements.js`.
@@ -135,18 +171,18 @@ Once a player is removed they are placed in the waivers array. When the team is 
 `team.json`
 
 ```javascript
-┌─────────┬───────────────────────┬────────┬──────────┬───────┬──────────────┬───────────┬───────┐
-│ (index) │         name          │ salary │ position │ team  │   opponent   │ avgpoints │ value │
-├─────────┼───────────────────────┼────────┼──────────┼───────┼──────────────┼───────────┼───────┤
-│   qb1   │    'Lamar Jackson'    │  8200  │   'QB'   │ 'BAL' │ 'HOU (weak)' │   29.85   │  224  │
-│   rb1   │   'Mark Ingram II'    │  5400  │   'RB'   │ 'BAL' │ 'HOU (weak)' │   16.29   │  281  │
-│   rb2   │     'Aaron Jones'     │  7100  │   'RB'   │ 'GB'  │ 'DET (weak)' │   21.09   │  286  │
-│   wr1   │    'Chris Godwin'     │  7000  │   'WR'   │ 'TB'  │ 'CAR (weak)' │   21.01   │  283  │
-│   wr2   │   'Michael Gallup'    │  5600  │   'WR'   │ 'DAL' │ 'ATL (weak)' │   16.05   │  298  │
-│   wr3   │   'Christian Kirk'    │  4300  │   'WR'   │ 'ARI' │    'WAS'     │   13.4    │  320  │
-│   te1   │ "James O'Shaughnessy" │  2700  │   'TE'   │ 'JAX' │    'TEN'     │   8.26    │  326  │
-│   fx1   │     'Dalvin Cook'     │  7600  │   'RB'   │ 'MIN' │ 'IND (weak)' │   21.62   │  301  │
-│  dst1   │        'Jets'         │  2000  │  'DST'   │ 'NYJ' │              │   8.38    │  238  │
-│  total  │                       │ 49900  │          │       │              │    155    │       │
-└─────────┴───────────────────────┴────────┴──────────┴───────┴──────────────┴───────────┴───────┘
+┌─────────┬───────────────────┬────────┬──────────┬───────┬──────────────┬──────────────┬───────────┬───────┐
+│ (index) │       name        │ salary │ position │ team  │   opponent   │     time     │ avgpoints │ value │
+├─────────┼───────────────────┼────────┼──────────┼───────┼──────────────┼──────────────┼───────────┼───────┤
+│   qb1   │   'Cam Newton'    │  6700  │   'QB'   │ 'NE'  │ 'LV (weak)'  │ '4:25PM EDT' │   32.14   │  -16  │
+│   rb1   │  'Chris Carson'   │  6600  │   'RB'   │ 'SEA' │ 'DAL (weak)' │ '1:00PM EDT' │   22.2    │  72   │
+│   rb2   │  'Miles Sanders'  │  6400  │   'RB'   │ 'PHI' │ 'CIN (weak)' │ '8:20PM EDT' │   21.1    │  78   │
+│   wr1   │ 'Adam Humphries'  │  3900  │   'WR'   │ 'TEN' │ 'MIN (weak)' │ '1:00PM EDT' │   13.25   │  69   │
+│   wr2   │ 'Julian Edelman'  │  6200  │   'WR'   │ 'NE'  │ 'LV (weak)'  │ '4:25PM EDT' │   20.95   │  70   │
+│   wr3   │ 'DeAndre Hopkins' │  7900  │   'WR'   │ 'ARI' │ 'DET (weak)' │ '1:00PM EDT' │   26.45   │  73   │
+│   te1   │   'Jonnu Smith'   │  5200  │   'TE'   │ 'TEN' │ 'MIN (weak)' │ '1:00PM EDT' │    19     │  48   │
+│   fx1   │ 'Chase Claypool'  │  3700  │   'WR'   │ 'PIT' │ 'HOU (weak)' │ '1:00PM EDT' │   12.25   │  77   │
+│  dst1   │    'Patriots'     │  3200  │  'DST'   │ 'NE'  │              │              │    8.5    │  376  │
+│  total  │                   │ 49800  │          │       │              │              │    175    │       │
+└─────────┴───────────────────┴────────┴──────────┴───────┴──────────────┴──────────────┴───────────┴───────┘
 ```

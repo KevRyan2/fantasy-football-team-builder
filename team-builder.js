@@ -1,11 +1,13 @@
 const fs = require('fs');
 const dataDK = require('./data/draftkings.json'); // update this file weekly with csv data from draftkings website
 const dataFD = require('./data/fanduel.json'); // update this file weekly with csv data from fanduel website
+const dataYH = require('./data/yahoo.json'); // update this file weekly with csv data from yahoo website
 const bench = require('./bench'); // array of players to keep off of the team
 const replacements = require('./replacements'); // order of player replacements when rebuilding
 
 const draftkings = [...dataDK];
 const fanduel = [...dataFD];
+const yahoo = [...dataYH];
 const players = []; // array of players sorted by value to build a team from
 const defenses = []; // array of defenses to sort by easiest to play against
 const waivers = []; // array of players removed from the team
@@ -14,8 +16,9 @@ const allowedSalary = 50000; // manually change if draftkings salary is differen
 const salaryBuffer = -5000; // amount under allowedSalary willing not to spend
 const pointsTarget = 50; // total player points of entire team aiming for
 const adjustDSTValue = 225; // amount of value to adjust if playing weaker defenses
-const useFanDuel = true; // use fanduel data to average the value of draftkings data of each player
-
+const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
+const useYahoo = false; // use yahoo data to average the value of draftkings data of each player
+const allowWeakDST = false; // allow weak defenses to be drafted
 let replacement = 0; // increments on each replacement
 
 // ---------------------------------------------------------------------------------
@@ -69,13 +72,22 @@ function filterDefenses() {
         }
     }
 
-    defenses.splice(0, 15); // keep the worst defenses
+    if (allowWeakDST) {
 
-    // findValue();
-    removeWeakDefenses();
+        findValue();
+
+    } else {
+
+        defenses.splice(0, 15); // keep the worst defenses
+        removeWeakDefenses();
+
+    }
 
 }
 
+// ---------------------------------------------------------------------------------
+// remove weak defenses from draftable players
+// ---------------------------------------------------------------------------------
 function removeWeakDefenses() {
 
     console.log('+------------------------+');
@@ -128,6 +140,13 @@ function findValue() {
                     }
                 }
 
+                // get opponent from yahoo data
+                for (let n = 0; n < yahoo.length; n++) {
+                    if (player.name === yahoo[n]['First Name'] + ' ' + yahoo[n]['Last Name']) {
+                        player.time = yahoo[n].Time;
+                    }
+                }
+
                 // adjust value if playing weaker dst
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
@@ -136,6 +155,7 @@ function findValue() {
                     }
                 }
 
+                // if combining with fanduel data
                 if (useFanDuel) {
                     for (let m = 0; m < fanduel.length; m++) {
                         if (fanduel[m].Nickname === player.name) {
@@ -144,11 +164,25 @@ function findValue() {
                                 const fsalary = fanduel[m].Salary;
                                 const fdvalue = fsalary / fppg;
                                 player.value = (player.value + fdvalue) / 2;
-                                // player.fd = 'x';
                             }
                         }
                     }
                 }
+
+                // if combining with yahoo data
+                if (useYahoo) {
+                    for (let p = 0; p < yahoo.length; p++) {
+                        if (yahoo[p].Nickname === player.name) {
+                            if (yahoo[p].FPPG > 0) {
+                                const yppg = yahoo[p].FPPG;
+                                const ysalary = yahoo[p].Salary * 250;
+                                const yvalue = ysalary / yppg;
+                                player.value = (player.value + yvalue) / 2;
+                            }
+                        }
+                    }
+                }
+
                 player.value = parseInt(player.value.toFixed(2));
                 players.push(player);
             }
@@ -172,6 +206,8 @@ function findValue() {
                     avgpoints: draftkings[i].AvgPointsPerGame,
                     value: draftkings[i].Salary / draftkings[i].AvgPointsPerGame
                 };
+
+                // if combining with fanduel data
                 if (useFanDuel) {
                     for (let j = 0; j < fanduel.length; j++) {
                         if (fanduel[j].Position === 'D') {
@@ -181,12 +217,28 @@ function findValue() {
                                     const fsalary = fanduel[j].Salary;
                                     const fdvalue = fsalary / fppg;
                                     this.player.value = (this.player.value + fdvalue) / 2;
-                                    // this.player.fd = 'x';
                                 }
                             }
                         }
                     }
                 }
+
+                // if combining with yahoo data
+                if (useYahoo) {
+                    for (let k = 0; k < yahoo.length; k++) {
+                        if (yahoo[k].Position === 'D') {
+                            if (yahoo[k].Team === draftkings[i].TeamAbbrev) {
+                                if (yahoo[k].FPPG > 0) {
+                                    const fppg = yahoo[k].FPPG;
+                                    const ysalary = yahoo[k].Salary * 250;
+                                    const yvalue = ysalary / fppg;
+                                    this.player.value = (this.player.value + yvalue) / 2;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 player.value = parseInt(player.value.toFixed(2));
                 players.push(this.player);
             }
@@ -217,6 +269,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -226,6 +279,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -235,6 +289,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -244,6 +299,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -253,6 +309,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -262,6 +319,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -271,6 +329,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -280,6 +339,7 @@ function createTeam(array) {
             position: '',
             team: '',
             opponent: '',
+            time: '',
             avgpoints: 0,
             value: 1000
         },
@@ -312,7 +372,7 @@ function createTeam(array) {
                 team.rb1.opponent = array[i].opponent;
                 team.rb1.avgpoints = array[i].avgpoints;
                 team.rb1.value = array[i].value;
-                // team.rb1.fd = array[i].fd;
+                team.rb1.time = array[i].time;
             }
         }
 
@@ -327,7 +387,7 @@ function createTeam(array) {
                     team.rb2.opponent = array[i].opponent;
                     team.rb2.avgpoints = array[i].avgpoints;
                     team.rb2.value = array[i].value;
-                    // team.rb2.fd = array[i].fd;
+                    team.rb2.time = array[i].time;
                 }
             }
         }
@@ -342,7 +402,7 @@ function createTeam(array) {
                 team.wr1.opponent = array[i].opponent;
                 team.wr1.avgpoints = array[i].avgpoints;
                 team.wr1.value = array[i].value;
-                // team.wr1.fd = array[i].fd;
+                team.wr1.time = array[i].time;
             }
         }
 
@@ -356,7 +416,7 @@ function createTeam(array) {
                 team.qb1.opponent = array[i].opponent;
                 team.qb1.avgpoints = array[i].avgpoints;
                 team.qb1.value = array[i].value;
-                // team.qb1.fd = array[i].fd;
+                team.qb1.time = array[i].time;
             }
         }
 
@@ -371,7 +431,7 @@ function createTeam(array) {
                     team.wr2.opponent = array[i].opponent;
                     team.wr2.avgpoints = array[i].avgpoints;
                     team.wr2.value = array[i].value;
-                    // team.wr2.fd = array[i].fd;
+                    team.wr2.time = array[i].time;
                 }
             }
         }
@@ -388,7 +448,7 @@ function createTeam(array) {
                         team.wr3.opponent = array[i].opponent;
                         team.wr3.avgpoints = array[i].avgpoints;
                         team.wr3.value = array[i].value;
-                        // team.wr3.fd = array[i].fd;
+                        team.wr3.time = array[i].time;
                     }
                 }
             }
@@ -409,7 +469,7 @@ function createTeam(array) {
                                     team.fx1.opponent = array[i].opponent;
                                     team.fx1.avgpoints = array[i].avgpoints;
                                     team.fx1.value = array[i].value;
-                                    // team.fx1.fd = array[i].fd;
+                                    team.fx1.time = array[i].time;
                                 }
                             }
                         }
@@ -429,7 +489,7 @@ function createTeam(array) {
                     team.te1.opponent = array[i].opponent;
                     team.te1.avgpoints = array[i].avgpoints;
                     team.te1.value = array[i].value;
-                    // team.te1.fd = array[i].fd;
+                    team.te1.time = array[i].time;
                 }
             }
         }
@@ -443,7 +503,6 @@ function createTeam(array) {
                 team.dst1.team = array[i].team;
                 team.dst1.avgpoints = array[i].avgpoints;
                 team.dst1.value = array[i].value;
-                // team.dst1.fd = array[i].fd;
             }
         }
 
