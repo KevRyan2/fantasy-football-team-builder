@@ -1,7 +1,7 @@
 const fs = require('fs');
-const dataDK = require('./data/draftkings.json'); // update this file weekly with csv data from draftkings website
-const dataFD = require('./data/fanduel.json'); // update this file weekly with csv data from fanduel website
-const dataYH = require('./data/yahoo.json'); // update this file weekly with csv data from yahoo website
+const dataDK = require('./data/week-6/draftkings.json'); // update this file weekly with csv data from draftkings website
+const dataFD = require('./data/week-6/fanduel.json'); // update this file weekly with csv data from fanduel website
+const dataYH = require('./data/week-6/yahoo.json'); // update this file weekly with csv data from yahoo website
 const bench = require('./bench'); // array of players to keep off of the team
 const replacements = require('./replacements'); // order of player replacements when rebuilding
 
@@ -16,9 +16,9 @@ const allowedSalary = 50000; // manually change if draftkings salary is differen
 const salaryBuffer = -5000; // amount under allowedSalary willing not to spend
 const pointsTarget = 50; // total player points of entire team aiming for
 const adjustDSTValue = 225; // amount of value to adjust if playing weaker defenses
-const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
+const useFanDuel = true; // use fanduel data to average the value of draftkings data of each player
 const useYahoo = false; // use yahoo data to average the value of draftkings data of each player
-const allowWeakDST = false; // allow weak defenses to be drafted
+const allowWeakDST = true; // allow weak defenses to be drafted
 let replacement = 0; // increments on each replacement
 
 // ---------------------------------------------------------------------------------
