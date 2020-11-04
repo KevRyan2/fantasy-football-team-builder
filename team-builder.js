@@ -1,13 +1,23 @@
 const fs = require('fs');
-const dataDK = require('./data/week-6/draftkings.json'); // update this file weekly with csv data from draftkings website
-const dataFD = require('./data/week-6/fanduel.json'); // update this file weekly with csv data from fanduel website
-const dataYH = require('./data/week-6/yahoo.json'); // update this file weekly with csv data from yahoo website
-const bench = require('./bench'); // array of players to keep off of the team
+const dataDK = require('./data/week-9/draftkings.json'); // update this file weekly with csv data from draftkings website
+const dataFD = require('./data/week-9/fanduel.json'); // update this file weekly with csv data from fanduel website
+const dataYH = require('./data/week-9/yahoo.json'); // update this file weekly with csv data from yahoo website
+const dataQB = require('./data/week-9/outcome-qb.json'); // QB outcomes
+const dataRB = require('./data/week-9/outcome-rb.json'); // RB outcomes
+const dataWR = require('./data/week-9/outcome-wr.json'); // WR outcomes
+const dataTE = require('./data/week-9/outcome-te.json'); // TE outcomes
+const dataDST = require('./data/week-9/outcome-dst.json'); // DST outcomes
+let bench = require('./bench'); // array of players to keep off of the team
 const replacements = require('./replacements'); // order of player replacements when rebuilding
 
 const draftkings = [...dataDK];
 const fanduel = [...dataFD];
 const yahoo = [...dataYH];
+const outcomeQB = [...dataQB];
+const outcomeRB = [...dataRB];
+const outcomeWR = [...dataWR];
+const outcomeTE = [...dataTE];
+const outcomeDST = [...dataDST];
 const players = []; // array of players sorted by value to build a team from
 const defenses = []; // array of defenses to sort by easiest to play against
 const waivers = []; // array of players removed from the team
@@ -16,10 +26,33 @@ const allowedSalary = 50000; // manually change if draftkings salary is differen
 const salaryBuffer = -5000; // amount under allowedSalary willing not to spend
 const pointsTarget = 50; // total player points of entire team aiming for
 const adjustDSTValue = 225; // amount of value to adjust if playing weaker defenses
-const useFanDuel = true; // use fanduel data to average the value of draftkings data of each player
+const useFanDuel = false; // use fanduel data to average the value of draftkings data of each player
 const useYahoo = false; // use yahoo data to average the value of draftkings data of each player
 const allowWeakDST = true; // allow weak defenses to be drafted
 let replacement = 0; // increments on each replacement
+const showOutcome = true; // show score outcomes of each position (requires outcome data)
+
+// ---------------------------------------------------------------------------------
+// find IR players and add them to the bench
+// ---------------------------------------------------------------------------------
+for (let i = 0; i < fanduel.length; i++) {
+    if ((fanduel[i]['Injury Indicator'] === 'IR') || (fanduel[i]['Injury Indicator'] === 'O')) {
+        bench.push({
+            name: fanduel[i].Nickname,
+            issue: fanduel[i]['Injury Details']
+        });
+    }
+}
+for (let i = 0; i < yahoo.length; i++) {
+    if ((yahoo[i]['Injury Status'] === 'IR') || (yahoo[i]['Injury Status'] === 'O')) {
+        bench.push({
+            name: yahoo[i]['First Name'] + ' ' + yahoo[i]['Last Name'],
+            issue: yahoo[i]['Injury Status']
+        });
+    }
+}
+bench = bench.filter((thing, index, self) => self.findIndex(t => t.name === thing.name) === index);
+bench.sort((a, b) => (a.name > b.name) ? 1 : -1);
 
 // ---------------------------------------------------------------------------------
 // remove bench players
@@ -30,7 +63,7 @@ if (bench.length) {
     console.log('+------------------------+');
     for (let i = draftkings.length - 1; i >= 0; i--) {
         for (let j = 0; j < bench.length; j++) {
-            if (draftkings[i] && (draftkings[i].Name === bench[j])) {
+            if (draftkings[i] && (draftkings[i].Name === bench[j].name)) {
                 draftkings.splice(i, 1);
             }
         }
@@ -133,6 +166,46 @@ function findValue() {
                 player.avgpoints = draftkings[i].AvgPointsPerGame;
                 player.value = draftkings[i].Salary / draftkings[i].AvgPointsPerGame;
 
+                if (showOutcome) {
+
+                    // get final points data from outcomeQB
+                    if (player.position === 'QB') {
+                        for (let a = 0; a < outcomeQB.length; a++) {
+                            if (player.name === outcomeQB[a].Name) {
+                                player.outcome = outcomeQB[a].FPts;
+                            }
+                        }
+                    }
+
+                    // get final points data from outcomeRB
+                    if (player.position === 'RB') {
+                        for (let b = 0; b < outcomeRB.length; b++) {
+                            if (player.name === outcomeRB[b].Name) {
+                                player.outcome = outcomeRB[b].FPts;
+                            }
+                        }
+                    }
+
+                    // get final points data from outcomeWR
+                    if (player.position === 'WR') {
+                        for (let c = 0; c < outcomeWR.length; c++) {
+                            if (player.name === outcomeWR[c].Name) {
+                                player.outcome = outcomeWR[c].FPts;
+                            }
+                        }
+                    }
+
+                    // get final points data from outcomeTE
+                    if (player.position === 'TE') {
+                        for (let d = 0; d < outcomeTE.length; d++) {
+                            if (player.name === outcomeTE[d].Name) {
+                                player.outcome = outcomeTE[d].FPts;
+                            }
+                        }
+                    }
+
+                }
+
                 // get opponent from fanduel data
                 for (let j = 0; j < fanduel.length; j++) {
                     if (player.name === fanduel[j].Nickname) {
@@ -207,6 +280,19 @@ function findValue() {
                     value: draftkings[i].Salary / draftkings[i].AvgPointsPerGame
                 };
 
+                if (showOutcome) {
+
+                    // get final points data from outcomeDST
+                    if (player.position === 'DST') {
+                        for (let a = 0; a < outcomeDST.length; a++) {
+                            if (player.name === outcomeDST[a].Name) {
+                                player.outcome = outcomeDST[a].FPts;
+                            }
+                        }
+                    }
+
+                }
+
                 // if combining with fanduel data
                 if (useFanDuel) {
                     for (let j = 0; j < fanduel.length; j++) {
@@ -271,6 +357,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         rb1: {
@@ -281,6 +368,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         rb2: {
@@ -291,6 +379,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         wr1: {
@@ -301,6 +390,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         wr2: {
@@ -311,6 +401,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         wr3: {
@@ -321,6 +412,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         te1: {
@@ -331,6 +423,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         fx1: {
@@ -341,6 +434,7 @@ function createTeam(array) {
             opponent: '',
             time: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         dst1: {
@@ -349,11 +443,13 @@ function createTeam(array) {
             position: '',
             team: '',
             avgpoints: 0,
+            outcome: 0,
             value: 1000
         },
         total: {
             salary: 0,
-            avgpoints: 0
+            avgpoints: 0,
+            outcome: 0,
         }
     };
 
@@ -371,6 +467,7 @@ function createTeam(array) {
                 team.rb1.team = array[i].team;
                 team.rb1.opponent = array[i].opponent;
                 team.rb1.avgpoints = array[i].avgpoints;
+                team.rb1.outcome = array[i].outcome;
                 team.rb1.value = array[i].value;
                 team.rb1.time = array[i].time;
             }
@@ -386,6 +483,7 @@ function createTeam(array) {
                     team.rb2.team = array[i].team;
                     team.rb2.opponent = array[i].opponent;
                     team.rb2.avgpoints = array[i].avgpoints;
+                    team.rb2.outcome = array[i].outcome;
                     team.rb2.value = array[i].value;
                     team.rb2.time = array[i].time;
                 }
@@ -401,6 +499,7 @@ function createTeam(array) {
                 team.wr1.team = array[i].team;
                 team.wr1.opponent = array[i].opponent;
                 team.wr1.avgpoints = array[i].avgpoints;
+                team.wr1.outcome = array[i].outcome;
                 team.wr1.value = array[i].value;
                 team.wr1.time = array[i].time;
             }
@@ -415,6 +514,7 @@ function createTeam(array) {
                 team.qb1.team = array[i].team;
                 team.qb1.opponent = array[i].opponent;
                 team.qb1.avgpoints = array[i].avgpoints;
+                team.qb1.outcome = array[i].outcome;
                 team.qb1.value = array[i].value;
                 team.qb1.time = array[i].time;
             }
@@ -430,6 +530,7 @@ function createTeam(array) {
                     team.wr2.team = array[i].team;
                     team.wr2.opponent = array[i].opponent;
                     team.wr2.avgpoints = array[i].avgpoints;
+                    team.wr2.outcome = array[i].outcome;
                     team.wr2.value = array[i].value;
                     team.wr2.time = array[i].time;
                 }
@@ -447,6 +548,7 @@ function createTeam(array) {
                         team.wr3.team = array[i].team;
                         team.wr3.opponent = array[i].opponent;
                         team.wr3.avgpoints = array[i].avgpoints;
+                        team.wr3.outcome = array[i].outcome;
                         team.wr3.value = array[i].value;
                         team.wr3.time = array[i].time;
                     }
@@ -468,6 +570,7 @@ function createTeam(array) {
                                     team.fx1.team = array[i].team;
                                     team.fx1.opponent = array[i].opponent;
                                     team.fx1.avgpoints = array[i].avgpoints;
+                                    team.fx1.outcome = array[i].outcome;
                                     team.fx1.value = array[i].value;
                                     team.fx1.time = array[i].time;
                                 }
@@ -488,6 +591,7 @@ function createTeam(array) {
                     team.te1.team = array[i].team;
                     team.te1.opponent = array[i].opponent;
                     team.te1.avgpoints = array[i].avgpoints;
+                    team.te1.outcome = array[i].outcome;
                     team.te1.value = array[i].value;
                     team.te1.time = array[i].time;
                 }
@@ -502,6 +606,7 @@ function createTeam(array) {
                 team.dst1.position = array[i].position;
                 team.dst1.team = array[i].team;
                 team.dst1.avgpoints = array[i].avgpoints;
+                team.dst1.outcome = array[i].outcome;
                 team.dst1.value = array[i].value;
             }
         }
@@ -514,6 +619,8 @@ function createTeam(array) {
     const totalPoints = team.qb1.avgpoints + team.rb1.avgpoints + team.rb2.avgpoints + team.wr1.avgpoints + team.wr2.avgpoints + team.wr3.avgpoints + team.te1.avgpoints + team.fx1.avgpoints + team.dst1.avgpoints;
     const underPoints = pointsTarget - totalPoints;
 
+    const totalOutcome = team.qb1.outcome + team.rb1.outcome + team.rb2.outcome + team.wr1.outcome + team.wr2.outcome + team.wr3.outcome + team.te1.outcome + team.fx1.outcome + team.dst1.outcome;
+  
     if (underPoints > 0) {
 
         console.log('+-------------------------');
@@ -594,6 +701,7 @@ function createTeam(array) {
                 }
                 finalteam.total.salary = totalsalary;
                 finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
+                finalteam.total.outcome = parseInt(totalOutcome.toFixed(2));
                 let jsondata = JSON.stringify(finalteam);
 
                 fs.writeFile('./team.json', jsondata, function (err) {
@@ -710,7 +818,7 @@ function rebuildTeam() {
         console.table(defenses);
 
         console.log('+-------------------------');
-        console.log('| unable to build team   |');
+        console.log('| ran out of waivers!    |');
         console.log('+-------------------------');
 
         console.table(this.team);
