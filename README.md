@@ -33,7 +33,7 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
-### Build a Team
+## Build a Team
 
 ```bash
 node build.js
@@ -41,7 +41,7 @@ node build.js
 
 A file named `team.json` will be saved in the project.
 
-### Options
+## Options
 
 #### Bench
 
@@ -100,7 +100,7 @@ Once a player is removed they are placed in the waivers array. When the team is 
 └─────────┴──────────────┴────────┴──────────┴──────┴──────────────┴───────────┴───────┘
 ```
 
-### Final Team Output
+## Final Team Output
 
 `team.json`
 
