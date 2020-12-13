@@ -1,6 +1,6 @@
 # Fantasy Football Team Builder
 
-Automatically build a team for DraftKings.
+Automatically build a DraftKings team.
 
 ## About
 
@@ -13,7 +13,7 @@ The team builder uses weekly game data provided by DraftKings to generate a full
 ### NPM
 
 ```bash
-npm init
+npm install
 ```
 ### DraftKings Data (Required)
 
@@ -33,49 +33,10 @@ Download the player data in CSV format from their site and convert it to JSON wi
 ]
 ```
 
-### FanDuel Data (Required)
-
-Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `fanduel.json` and save it in the project directory.
-
-`fanduel.json` should look similar to this:
-
-```javascript
-[
-    {
-        "Position": "RB",
-        "Nickname": "Christian McCaffrey",
-        "FPPG": 25.82500076,
-        "Salary": 10000,
-        "Team": "CAR",
-        "Opponent": "LV"
-    }
-]
-```
-
-### Yahoo Data (Required)
-
-Download the player data in CSV format from their site and convert it to JSON with something like [csvjson](https://csvjson.com/). Name the file `yahoo.json` and save it in the project directory.
-
-`yahoo.json` should look similar to this:
-
-```javascript
-[
-    {
-        "Position": "RB",
-        "First Name": "Christian",
-        "Last Name": "McCaffrey",
-        "FPPG": 25.8,
-        "Salary": 20,
-        "Team": "CAR",
-        "Opponent": "LV"
-    }
-]
-```
-
 ### Build a Team
 
 ```bash
-node team-builder.js
+node build.js
 ```
 
 A file named `team.json` will be saved in the project.
@@ -84,10 +45,15 @@ A file named `team.json` will be saved in the project.
 
 #### Bench
 
-Remove players from the team builder by adding them to the bench array in `bench.js`.
+Remove players from the team builder by adding them to the bench array.
 
 ```javascript
-[ 'Christian McCaffrey', 'Michael Thomas' ]
+[ 
+    {
+        name: 'Christian McCaffrey',
+        issue: 'ir'
+    } 
+]
 ```
 
 #### Total Points Target
@@ -114,41 +80,9 @@ The salary buffer is how much you are willing NOT to spend on salary. For instan
 const salaryBuffer = -100
 ```
 
-#### Weak Defenses
-
-Players playing weak defenses can be given a better value. The number will be subtracted from their initial value and will lead them to be drafted higher.
-
-```javascript
-const adjustDSTValue = 50;
-```
-
-#### Incorporate FanDuel data
-
-Set this to true if you want to merge FanDuel data with Draftkings data to calculate player values.
-
-```javascript
-const useFanduel = false
-```
-
-#### Incorporate Yahoo data
-
-Set this to true if you want to merge Yahoo data with Draftkings data to calculate player values.
-
-```javascript
-const useYahoo = false
-```
-
-#### Allow Weak Defenses
-
-Set this to true if you want to allow weak defenses to be drafted to the team.
-
-```javascript
-const useFanduel = false
-```
-
 #### Replacements
 
-When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array in `replacements.js`.
+When a team is built, if it does not meet the total points target or if it is over the salary cap, the team will be rebuilt by removing a player by position. The order of positions can be modified in the replacements array.
 
 ```javascript
 [ 'DST', 'DST', 'TE', 'QB', 'WR', 'TE', 'RB', 'DST', 'QB', 'TE' ]
@@ -171,18 +105,18 @@ Once a player is removed they are placed in the waivers array. When the team is 
 `team.json`
 
 ```javascript
-┌─────────┬───────────────────┬────────┬──────────┬───────┬──────────────┬──────────────┬───────────┬───────┐
-│ (index) │       name        │ salary │ position │ team  │   opponent   │     time     │ avgpoints │ value │
-├─────────┼───────────────────┼────────┼──────────┼───────┼──────────────┼──────────────┼───────────┼───────┤
-│   qb1   │   'Cam Newton'    │  6700  │   'QB'   │ 'NE'  │ 'LV (weak)'  │ '4:25PM EDT' │   32.14   │  -16  │
-│   rb1   │  'Chris Carson'   │  6600  │   'RB'   │ 'SEA' │ 'DAL (weak)' │ '1:00PM EDT' │   22.2    │  72   │
-│   rb2   │  'Miles Sanders'  │  6400  │   'RB'   │ 'PHI' │ 'CIN (weak)' │ '8:20PM EDT' │   21.1    │  78   │
-│   wr1   │ 'Adam Humphries'  │  3900  │   'WR'   │ 'TEN' │ 'MIN (weak)' │ '1:00PM EDT' │   13.25   │  69   │
-│   wr2   │ 'Julian Edelman'  │  6200  │   'WR'   │ 'NE'  │ 'LV (weak)'  │ '4:25PM EDT' │   20.95   │  70   │
-│   wr3   │ 'DeAndre Hopkins' │  7900  │   'WR'   │ 'ARI' │ 'DET (weak)' │ '1:00PM EDT' │   26.45   │  73   │
-│   te1   │   'Jonnu Smith'   │  5200  │   'TE'   │ 'TEN' │ 'MIN (weak)' │ '1:00PM EDT' │    19     │  48   │
-│   fx1   │ 'Chase Claypool'  │  3700  │   'WR'   │ 'PIT' │ 'HOU (weak)' │ '1:00PM EDT' │   12.25   │  77   │
-│  dst1   │    'Patriots'     │  3200  │  'DST'   │ 'NE'  │              │              │    8.5    │  376  │
-│  total  │                   │ 49800  │          │       │              │              │    175    │       │
-└─────────┴───────────────────┴────────┴──────────┴───────┴──────────────┴──────────────┴───────────┴───────┘
+┌─────────┬──────────────────┬────────┬──────────┬───────┬──────────┬───────────┬───────┬──────────────┐
+│ (index) │       name       │ salary │ position │ team  │ opponent │ avgpoints │ value │     time     │
+├─────────┼──────────────────┼────────┼──────────┼───────┼──────────┼───────────┼───────┼──────────────┤
+│   qb1   │   'Jake Luton'   │  5400  │   'QB'   │ 'JAX' │   'GB'   │   25.46   │  212  │ '01:00PM ET' │
+│   rb1   │  'Dalvin Cook'   │  8900  │   'RB'   │ 'MIN' │  'CHI'   │   30.59   │  290  │ '08:15PM ET' │
+│   rb2   │  'Alvin Kamara'  │  8200  │   'RB'   │ 'NO'  │   'SF'   │   26.82   │  305  │ '04:25PM ET' │
+│   wr1   │  'Allen Lazard'  │  4000  │   'WR'   │ 'GB'  │  'JAX'   │   18.37   │  217  │ '01:00PM ET' │
+│   wr2   │ 'Davante Adams'  │  9000  │   'WR'   │ 'GB'  │  'JAX'   │   29.58   │  304  │ '01:00PM ET' │
+│   wr3   │  'Keelan Cole'   │  3400  │   'WR'   │ 'JAX' │   'GB'   │   11.02   │  308  │ '01:00PM ET' │
+│   te1   │  'C.J. Uzomah'   │  2500  │   'TE'   │ 'CIN' │  'PIT'   │   11.35   │  220  │ '04:25PM ET' │
+│   fx1   │ 'Travis Fulgham' │  6400  │   'WR'   │ 'PHI' │  'NYG'   │   19.9    │  321  │ '01:00PM ET' │
+│  dst1   │      'Rams'      │  2200  │  'DST'   │ 'LAR' │          │   7.25    │  303  │              │
+│  total  │                  │ 50000  │          │       │          │    180    │       │              │
+└─────────┴──────────────────┴────────┴──────────┴───────┴──────────┴───────────┴───────┴──────────────┘
 ```
