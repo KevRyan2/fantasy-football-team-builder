@@ -17,9 +17,48 @@ const defenses = []; // array of defenses to sort by easiest to play against
 const waivers = []; // array of players removed from the team
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
-const pointsTarget = 178; // total player points of entire team aiming for
+const pointsTarget = 150; // total player points of entire team aiming for
 const adjustDSTValue = 225; // amount of value to adjust if playing weaker defenses
 let replacement = 0; // increments on each replacement
+
+// SIM TESTING WILL BE NEEDED
+// 1. Add a locked players array
+// 2. Add a stack option w/ bool toggle, need position locks for stack (QB + WR/TE)
+// 3. Need to factor in variance - week by week points not just average
+//    - Get last years weekly totals per player, combine with this years, find the variance
+//    - adjustValueForUpside
+// 4. Need to factor in historical fantasy points
+//    - ex. 10% adjustment vs current points (+10% if higher, -10% if lower)
+// 5. Add in upside variace 
+//    - based off #3
+//    - who can go off in any given week based on weekly high's
+//    - adjustValueForUpside
+// 6. Improve adjustValueForDST 
+//    - base off of opponent DST
+//    - factor in injuries
+// 7. Use projected team totals based off vegas odds
+//    - ex. large spread/low game total = worse for RB on underdog
+//    - adjustValueForVegas
+// 8. Home vs Away
+//    - position by position basis
+//    - adjustForHomeTeam
+// 9. Adjust for weather
+//    - rain/snow/wind can affect game script
+//    - adjustForWeather
+// Bonus. List of teams with positional oddities
+//    - Teams with 1 good CB = adjustSecondBestReceiver (WR or TE) to have more value
+//    - Teams with 2 good CB = adjustThirdBestReceiver (WR or TE) to have more value
+//    - Teams that play zone = adjustLowVarianceReceiver (increase value to WR or TE with lower variance - slot/short passes)
+// Bonus. Adjust for opponent boost
+//    - add in top 3 opponents for each player
+// Bonus. Adjust for ownership and value
+//    - Multi-entry tournament toggle
+//    - Add a list of chalk players to blocked players
+//    - Increase value of other players on their team
+// Bonus. Adjust for injuries
+//    - Add list of DST's to devalue a
+//    - Add list of backups that correlate to the injured player
+// https://github.com/BenBrostoff/draftfast
 
 // ---------------------------------------------------------------------------------
 // manually add players on IR or are out here
@@ -135,7 +174,6 @@ function findValue() {
                 player.time = time;
 
                 // adjust value if playing weaker dst
-                // To-Do: base this off positions
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
                         player.value = player.value + adjustDSTValue;
@@ -564,6 +602,9 @@ function buildTeam(array) {
                 rebuildTeam();
 
             } else {
+
+                // if offense against defense, rebuild https://github.com/BenBrostoff/draftfast
+                // 
 
                 let finalteam = team;
                 let totalsalary = 0;
