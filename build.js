@@ -3,7 +3,7 @@ const fs = require('fs');
 // ---------------------------------------------------------------------------------
 // update this data weekly, set week-x to the week you want to build
 // ---------------------------------------------------------------------------------
-const dataDK = require('./data/week-14/draftkings.json'); // update this file weekly with csv data from draftkings website
+const dataDK = require('./data/week-5/draftkings.json'); // update this file weekly with csv data from draftkings website
 
 // ---------------------------------------------------------------------------------
 // order of player replacements when rebuilding
@@ -17,7 +17,7 @@ const defenses = []; // array of defenses to sort by easiest to play against
 const waivers = []; // array of players removed from the team
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
-const pointsTarget = 50; // total player points of entire team aiming for
+const pointsTarget = 178; // total player points of entire team aiming for
 const adjustDSTValue = 225; // amount of value to adjust if playing weaker defenses
 let replacement = 0; // increments on each replacement
 
@@ -26,15 +26,35 @@ let replacement = 0; // increments on each replacement
 // ---------------------------------------------------------------------------------
 let bench = [
     {
-        name: 'Christian McCaffrey',
-        issue: 'ir'
+        name: 'David Montgomery',
+        issue: 'questionable'
     },
     {
-        name: 'Dak Prescott',
+        name: 'Michael Thomas',
         issue: 'out'
     },
     {
-        name: 'Odell Beckham Jr.',
+        name: 'Jarvis Landy',
+        issue: 'out'
+    },
+    {
+        name: 'Jerry Juedy',
+        issue: 'out'
+    },
+    {
+        name: 'DJ Chark Jr.',
+        issue: 'out'
+    },
+    {
+        name: 'Will Fuller V',
+        issue: 'out'
+    },
+    {
+        name: 'Michael Gallup',
+        issue: 'out'
+    },
+    {
+        name: 'Marquez Valdes-Scantling',
         issue: 'out'
     }
 ];
@@ -115,9 +135,10 @@ function findValue() {
                 player.time = time;
 
                 // adjust value if playing weaker dst
+                // To-Do: base this off positions
                 for (let k = 0; k < defenses.length; k++) {
                     if (player.opponent === defenses[k].team) {
-                        player.value = player.value - adjustDSTValue;
+                        player.value = player.value + adjustDSTValue;
                         player.opponent = player.opponent + ' (weak)';
                     }
                 }
