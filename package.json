@@ -16,5 +16,7 @@
     "url": "https://github.com/iniguezdj/fantasy-football-team-builder/issues"
   },
   "homepage": "https://github.com/iniguezdj/fantasy-football-team-builder#readme",
-  "dependencies": {}
+  "dependencies": {
+    "axios": "^0.22.0"
+  }
 }

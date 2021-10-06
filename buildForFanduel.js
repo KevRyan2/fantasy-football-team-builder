@@ -5,41 +5,6 @@ const defenseVsRB = require('./rankings/defenseVsRB.json');
 const defenseVsWR = require('./rankings/defenseVsWR.json');
 const defenseVsTE = require('./rankings/defenseVsTE.json');
 
-const mapTeamAbbrev = {
-    'Football Team': 'WAS',
-    'Falcons': 'ATL',
-    'Chiefs': 'KC',
-    'Cowboys': 'DAL',
-    'Buccaneers': 'TB',
-    '49ers': 'SF',
-    'Seahawks': 'SEA',
-    'Texans': 'HOU',
-    'Colts': 'IND',
-    'Packers': 'GB',
-    'Steelers': 'PIT',
-    'Titans': 'TEN',
-    'Giants': 'NYG',
-    'Jaguars': 'JAX',
-    'Eagles': 'PHI',
-    'Vikings': 'MIN',
-    'Rams': 'LAR',
-    'Browns': 'CLE',
-    'Raiders': 'LV',
-    'Lions': 'DET',
-    'Bears': 'CHI',
-    'Dolphins': 'MIA',
-    'Ravens': 'BAL',
-    'Panthers': 'CAR',
-    'Cardinals': 'ARI',
-    'Bengals': 'CIN',
-    'Saints': 'NO',
-    'Chargers': 'LAC',
-    'Patriots': 'NE',
-    'Jets': 'NYJ',
-    'Broncos': 'DEN',
-    'Bills': 'BUF'
-};
-
 /*
     Notes:
     - Value is salary / avg points
@@ -67,23 +32,32 @@ const replacements = ['WR', 'WR', 'DST', 'DST', 'RB', 'RB', 'WR', 'WR', 'DST', '
 // ---------------------------------------------------------------------------------
 // Arrays for Adjustments & Settings
 // ---------------------------------------------------------------------------------
+// const maxPlayersPerTeam = 2;
+// const prioritizeStack = true;
+const weakDefenses = [
+    // { team: 'JAX' },
+    // { team: 'ATL' },
+    // { team: 'KC' },
+    // { team: 'DAL' }
+];
 
-/* Weak Opponent DST - CBS Sports by position */
-function calcWorst10Data(defenseArray) {
-    let bottom10Data = defenseArray.slice(0, 10);
-    let teams = [];
+async function calcWorst10Data(defenseArray) {
+    let bottom10Data = defenseVsQB.slice(0, 10);
+    console.log('+------------------------+');
+    console.log('| weakDEFVsQB |', worst10Data);
+    console.log('+------------------------+');
     for (let i = bottom10Data.length - 1; i >= 0; i--) {
-        const def_full = bottom10Data[i]['TEAM'].substr(6);
-        const def_abbrev = mapTeamAbbrev[def_full];
-        teams.push(def_abbrev);
+        //Remove the defense/"TEAM" col
+        //Slice out opponent
+        //Map to abbrev
+        //return
     }
-    return teams;
 }
-const weakDSTvsQB = calcWorst10Data(defenseVsQB);
-const weakDSTvsRB = calcWorst10Data(defenseVsRB);
-const weakDSTvsWR = calcWorst10Data(defenseVsWR);
-const weakDSTvsTE = calcWorst10Data(defenseVsTE);
 
+const weakDSTvsQB = await calcWorst10Data(defenseVsQB);
+const weakDSTvsRB = await calcWorst10Data(defenseVsRB);
+const weakDSTvsWR = await calcWorst10Data(defenseVsWR);
+const weakDSTvsTE = await calcWorst10Data(defenseVsTE);
 
 // ---------------------------------------------------------------------------------
 // Adjustment Variables
@@ -175,27 +149,14 @@ if (bench.length) {
 // ---------------------------------------------------------------------------------
 // 2. Find and Adjust Value Functions
 // ---------------------------------------------------------------------------------
-function adjustDefense(player) {
-    let weakVsDST = [];
-    let adjustByValue;
-    if (player.position.indexOf('QB') > -1) {
-        weakVsDST = weakDSTvsQB;
-        adjustByValue = adjustWeakDEFvsQB;
-    } else if (player.position.indexOf('RB') > -1) {
-        weakVsDST = weakDSTvsRB;
-        adjustByValue = adjustWeakDEFvsRB;
-    } else if (player.position.indexOf('WR') > -1) {
-        weakVsDST = weakDSTvsWR;
-        adjustByValue = adjustWeakDEFvsWR;
-    } else if (player.position.indexOf('TE') > -1) {
-        weakVsDST = weakDSTvsTE;
-        adjustByValue = adjustWeakDEFvsTE;
-    }
-    console.log('do we have a DST', weakVsDST);
-    for (let k = 0; k < weakVsDST.length; k++) {
-        if (player.opponent === weakVsDST[k]) {
-            player.value = player.value * adjustByValue;
+async function adjustDefense(player) {
+    for (let k = 0; k < weakDefenses.length; k++) {
+        if (player.opponent === weakDefenses[k].team) {
+            player.value = player.value * adjustDSTValue;
             player.opponent = player.opponent + ' (weak)';
+            console.log('+------------------------+');
+            console.log('| adjustDefense for player |', player);
+            console.log('+------------------------+');
         }
     }
 
@@ -704,6 +665,7 @@ function buildTeam(array) {
                 console.log('| bench');
                 console.table(bench);
                 console.log('| adjusted DST');
+                console.table(weakDefenses);
                 console.log('| waivers');
                 console.table(waivers);
                 console.log('| final team');
