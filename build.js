@@ -4,6 +4,8 @@ const defenseVsQB = require('./rankings/defenseVsQB.json');
 const defenseVsRB = require('./rankings/defenseVsRB.json');
 const defenseVsWR = require('./rankings/defenseVsWR.json');
 const defenseVsTE = require('./rankings/defenseVsTE.json');
+const benchedPlayers = require('./rankings/bench');
+const getVegasData   = require('./getOdds.js');
 
 const mapTeamAbbrev = {
     'Football Team': 'WAS',
@@ -85,6 +87,16 @@ const weakDSTvsWR = calcWorst10Data(defenseVsWR);
 const weakDSTvsTE = calcWorst10Data(defenseVsTE);
 
 
+/* Get Vegas Odds */
+async function getVegasOdds() {
+    const vegasData = await getVegasData();
+    console.log('+------------------------+');
+    console.log('| got vegas data |', vegasData);
+    console.log('+------------------------+');
+}
+
+getVegasOdds();
+
 // ---------------------------------------------------------------------------------
 // Adjustment Variables
 // ---------------------------------------------------------------------------------
@@ -105,49 +117,10 @@ const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
 const pointsTarget = 150; // minimumum total player points of entire team aiming for
 let replacement = 0; // increments on each replacement
 
-
-// =================================================================================
-// =================================================================================
-// =================================================================================
-// =================================================================================
-
 // ---------------------------------------------------------------------------------
 // manually add players on IR or are out here
 // ---------------------------------------------------------------------------------
-let bench = [
-    {
-        name: 'David Montgomery',
-        issue: 'questionable'
-    },
-    {
-        name: 'Michael Thomas',
-        issue: 'out'
-    },
-    {
-        name: 'Jarvis Landy',
-        issue: 'out'
-    },
-    {
-        name: 'Jerry Juedy',
-        issue: 'out'
-    },
-    {
-        name: 'DJ Chark Jr.',
-        issue: 'out'
-    },
-    {
-        name: 'Will Fuller V',
-        issue: 'out'
-    },
-    {
-        name: 'Michael Gallup',
-        issue: 'out'
-    },
-    {
-        name: 'Marquez Valdes-Scantling',
-        issue: 'out'
-    }
-];
+let bench = benchedPlayers;
 
 // ---------------------------------------------------------------------------------
 // 1. remove bench players
@@ -191,7 +164,6 @@ function adjustDefense(player) {
         weakVsDST = weakDSTvsTE;
         adjustByValue = adjustWeakDEFvsTE;
     }
-    console.log('do we have a DST', weakVsDST);
     for (let k = 0; k < weakVsDST.length; k++) {
         if (player.opponent === weakVsDST[k]) {
             player.value = player.value * adjustByValue;
@@ -202,6 +174,10 @@ function adjustDefense(player) {
     player.value = parseInt(player.value.toFixed(2));
     players.push(player);
 }
+
+// function adjustForOdds(player) {
+//     
+// }
 
 async function findValue() {
 

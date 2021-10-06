@@ -1,4 +1,5 @@
 var axios = require("axios").default;
+var api_key = require('./env.json')[api_key];
 
 // Get the game totals
 var totalsOptions = {
@@ -13,7 +14,7 @@ var totalsOptions = {
   },
   headers: {
     'x-rapidapi-host': 'odds.p.rapidapi.com',
-    'x-rapidapi-key': '4da2b85e64mshfde311e0c871e18p126492jsn6433f77d484d'
+    'x-rapidapi-key': api_key
   }
 };
 
@@ -30,7 +31,7 @@ var spreadOptions = {
   },
   headers: {
     'x-rapidapi-host': 'odds.p.rapidapi.com',
-    'x-rapidapi-key': '4da2b85e64mshfde311e0c871e18p126492jsn6433f77d484d'
+    'x-rapidapi-key': api_key
   }
 };
 
