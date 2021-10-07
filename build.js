@@ -4,7 +4,7 @@ const defenseVsQB = require('./rankings/defenseVsQB.json');
 const defenseVsRB = require('./rankings/defenseVsRB.json');
 const defenseVsWR = require('./rankings/defenseVsWR.json');
 const defenseVsTE = require('./rankings/defenseVsTE.json');
-const mapTeamAbbrev = require('./data/teamMap.json');
+const mapTeamNicknameAbbrev = require('./data/nicknameTeamMap.json');
 const benchedPlayers = require('./rankings/bench');
 const getVegasData   = require('./utilities/getOdds.js').getVegasOdds;
 // const testVegasData = require('./data/testVegasOdds.json');
@@ -43,7 +43,7 @@ function calcWorst10Data(defenseArray) {
     let teams = [];
     for (let i = bottom10Data.length - 1; i >= 0; i--) {
         const def_full = bottom10Data[i]['TEAM'].substr(6);
-        const def_abbrev = mapTeamAbbrev[def_full];
+        const def_abbrev = mapTeamNicknameAbbrev[def_full];
         teams.push(def_abbrev);
     }
     return teams;
@@ -226,27 +226,15 @@ async function findValue() {
 // ---------------------------------------------------------------------------------
 
 async function getVegasOdds() {
-    //console.log('get vegas data', getVegasData);
     try {
-        let vegasData = await getVegasData();
+        let finalVegasData = await getVegasData();
         console.log('+------------------------+');
-        console.log('| got vegas data |', vegasData);
+        console.log('| got vegas data |', finalVegasData);
         console.log('+------------------------+');
-        let jsondata = JSON.stringify(vegasData);
-        console.log('+------------------------+');
-        console.log('| stringify vegas data |', jsondata);
-        console.log('+------------------------+');
-        fs.writeFile('./data/testVegasOdds.json', jsondata, function (err) {
-         if (err) throw err;
-        });
-        return jsondata;
+        return finalVegasData;
     } catch (e) {
-
+        console.error('error getVegasOdds', e);
     }
-    
-
-    //const testData = testVegasData;
-    //return vegasData;
 }
 
 async function buildTeam(array) {
