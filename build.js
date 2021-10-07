@@ -4,43 +4,10 @@ const defenseVsQB = require('./rankings/defenseVsQB.json');
 const defenseVsRB = require('./rankings/defenseVsRB.json');
 const defenseVsWR = require('./rankings/defenseVsWR.json');
 const defenseVsTE = require('./rankings/defenseVsTE.json');
+const mapTeamAbbrev = require('./data/teamMap.json');
 const benchedPlayers = require('./rankings/bench');
-const getVegasData   = require('./getOdds.js');
-
-const mapTeamAbbrev = {
-    'Football Team': 'WAS',
-    'Falcons': 'ATL',
-    'Chiefs': 'KC',
-    'Cowboys': 'DAL',
-    'Buccaneers': 'TB',
-    '49ers': 'SF',
-    'Seahawks': 'SEA',
-    'Texans': 'HOU',
-    'Colts': 'IND',
-    'Packers': 'GB',
-    'Steelers': 'PIT',
-    'Titans': 'TEN',
-    'Giants': 'NYG',
-    'Jaguars': 'JAX',
-    'Eagles': 'PHI',
-    'Vikings': 'MIN',
-    'Rams': 'LAR',
-    'Browns': 'CLE',
-    'Raiders': 'LV',
-    'Lions': 'DET',
-    'Bears': 'CHI',
-    'Dolphins': 'MIA',
-    'Ravens': 'BAL',
-    'Panthers': 'CAR',
-    'Cardinals': 'ARI',
-    'Bengals': 'CIN',
-    'Saints': 'NO',
-    'Chargers': 'LAC',
-    'Patriots': 'NE',
-    'Jets': 'NYJ',
-    'Broncos': 'DEN',
-    'Bills': 'BUF'
-};
+const getVegasData   = require('./utilities/getOdds.js').getVegasOdds;
+// const testVegasData = require('./data/testVegasOdds.json');
 
 /*
     Notes:
@@ -85,17 +52,6 @@ const weakDSTvsQB = calcWorst10Data(defenseVsQB);
 const weakDSTvsRB = calcWorst10Data(defenseVsRB);
 const weakDSTvsWR = calcWorst10Data(defenseVsWR);
 const weakDSTvsTE = calcWorst10Data(defenseVsTE);
-
-
-/* Get Vegas Odds */
-async function getVegasOdds() {
-    const vegasData = await getVegasData();
-    console.log('+------------------------+');
-    console.log('| got vegas data |', vegasData);
-    console.log('+------------------------+');
-}
-
-getVegasOdds();
 
 // ---------------------------------------------------------------------------------
 // Adjustment Variables
@@ -175,9 +131,6 @@ function adjustDefense(player) {
     players.push(player);
 }
 
-// function adjustForOdds(player) {
-//     
-// }
 
 async function findValue() {
 
@@ -231,7 +184,7 @@ async function findValue() {
                 );
                 player.time = time;
 
-                // djust value if playing weaker dst
+                // Adjust value if playing weaker dst
                 await adjustDefense(player);
                 
             }
@@ -271,10 +224,38 @@ async function findValue() {
 // ---------------------------------------------------------------------------------
 // 3. Build team
 // ---------------------------------------------------------------------------------
-function buildTeam(array) {
+
+async function getVegasOdds() {
+    //console.log('get vegas data', getVegasData);
+    try {
+        let vegasData = await getVegasData();
+        console.log('+------------------------+');
+        console.log('| got vegas data |', vegasData);
+        console.log('+------------------------+');
+        let jsondata = JSON.stringify(vegasData);
+        console.log('+------------------------+');
+        console.log('| stringify vegas data |', jsondata);
+        console.log('+------------------------+');
+        fs.writeFile('./data/testVegasOdds.json', jsondata, function (err) {
+         if (err) throw err;
+        });
+        return jsondata;
+    } catch (e) {
+
+    }
+    
+
+    //const testData = testVegasData;
+    //return vegasData;
+}
+
+async function buildTeam(array) {
     console.log('+------------------------+');
     console.log('| adjustedValues   |', adjustedValues);
     console.log('+------------------------+');
+
+    // adjust for implied team total
+    await getVegasOdds();
 
     // sort players array by value (salary / avgpoints)
     array.sort((a, b) => (a.value > b.value) ? 1 : -1);

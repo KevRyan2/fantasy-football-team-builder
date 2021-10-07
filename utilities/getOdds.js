@@ -1,5 +1,5 @@
 var axios = require("axios").default;
-var api_key = require('./env.json')[api_key];
+var api_key = require('../env.json')['rapid_api_key'];
 
 // Get the game totals
 var totalsOptions = {
@@ -35,27 +35,27 @@ var spreadOptions = {
   }
 };
 
-let vegasData = {};
-
 async function getVegasData() {
-  axios.request(totalsOptions).then(function (resTotals) {
-    console.log('got totals', resTotals.data);
-    vegasData.totals = resTotals.data;
-    axios.request(spreadOptions).then(function (resSpreads) {
-      console.log('got spreads', resSpreads.data);
-      return vegasData.spreads = resSpreads.data;
-    }).catch(function (error) {
-      console.error(error);
-    });
-  }).catch(function (error) {
-    console.error(error);
-  });
+  try {
+    let totals = await axios.request(totalsOptions);
+    let spreads = await axios.request(spreadOptions);
+    let vegasData = {
+      totals: totals.data,
+      spreads: spreads.data
+    };
+    return vegasData;
+  } catch (e) {
+    console.error('error with getVegasData', e);
+    return e;
+  }
 }
 
 
 
 
-module.exports = getVegasData;
+module.exports = { 
+  getVegasOdds: getVegasData
+};
 
 
 
