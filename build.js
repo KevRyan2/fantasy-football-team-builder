@@ -228,9 +228,6 @@ async function findValue() {
 async function getVegasOdds() {
     try {
         let finalVegasData = await getVegasData();
-        console.log('+------------------------+');
-        console.log('| got vegas data |', finalVegasData);
-        console.log('+------------------------+');
         return finalVegasData;
     } catch (e) {
         console.error('error getVegasOdds', e);

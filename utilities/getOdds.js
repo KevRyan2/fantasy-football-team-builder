@@ -45,22 +45,6 @@ async function getVegasData() {
      totals: testVegasData.totals.data,
      spreads: testVegasData.spreads.data
    };
-     // console.log('+------------------------+');
-     // console.log('| base odds data |', vegasData.totals);
-     // console.log('+------------------------+');
-    let teamOdds = {};
-    for (let i = vegasData.totals.length - 1; i >= 0; i--) {
-      let teamObj = vegasData.totals[i];
-      let odds = teamObj.sites.filter((obj) => {
-        const { site_key } = obj;
-        return site_key === 'barstool';
-      });
-      teamOdds[teamNameMap[teamObj.home_team]] = odds;
-    }
-    console.log('+------------------------+');
-    console.log('| team data totals |', teamOdds);
-    console.log('+------------------------+');
-    return teamOdds;
     //PROD
     // let totals = await axios.request(totalsOptions);
     // let spreads = await axios.request(spreadOptions);
@@ -76,6 +60,28 @@ async function getVegasData() {
     //  if (err) throw err;
     // });
     // return jsondata;
+    let teamOdds = {};
+    for (let i = vegasData.totals.length - 1; i >= 0; i--) {
+      let teamObj = vegasData.totals[i];
+      let odds = teamObj.sites.filter((obj) => {
+        const { site_key } = obj;
+        return site_key === 'barstool';
+      });
+      teamOdds[teamNameMap[teamObj.teams[0]]] = odds;
+      teamOdds[teamNameMap[teamObj.teams[1]]] = odds;
+    }
+    let filteredTeamOdds = {};
+    Object.keys(teamOdds).forEach(function(teamKey) {
+      filteredTeamOdds[teamKey] = teamOdds[teamKey][0].odds.totals.points[0];
+    });
+    // let finalOdds = {};
+    // Object.keys(filteredTeamOdds).forEach(function(teamKey) {
+    //   finalOdds[teamKey] = filteredTeamOdds[teamKey].totals.points[0];
+    // });
+    console.log('+------------------------+');
+    console.log('| team data totals |', filteredTeamOdds);
+    console.log('+------------------------+');
+    return filteredTeamOdds;
   } catch (e) {
     console.error('error with getVegasData', e);
     return e;
