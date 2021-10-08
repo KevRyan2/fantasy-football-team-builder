@@ -63,6 +63,7 @@ const adjustWeakDEFvsRB = adjustedValues.weakDEFvsRB;
 const adjustWeakDEFvsWR = adjustedValues.weakDEFvsWR;
 const adjustWeakDEFvsTE = adjustedValues.weakDEFvsTE; 
 const adjustWeakOFFvsDST = adjustedValues.weakOFFvsDST;
+const adjustForHighTeamTotal = adjustedValues.topHalfTeamTotal
 
 
 // General Vars
@@ -72,38 +73,33 @@ const allowedSalary = 50000; // manually change if draftkings salary is differen
 const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
 const pointsTarget = 150; // minimumum total player points of entire team aiming for
 let replacement = 0; // increments on each replacement
+let topTenTeamTotals = [];
 
-// ---------------------------------------------------------------------------------
-// manually add players on IR or are out here
-// ---------------------------------------------------------------------------------
-let bench = benchedPlayers;
 
-// ---------------------------------------------------------------------------------
-// 1. remove bench players
-// ---------------------------------------------------------------------------------
-if (bench.length) {
-    console.log('+------------------------+');
-    console.log('| removing bench players |');
-    console.log('+------------------------+');
-    for (let i = draftkings.length - 1; i >= 0; i--) {
-        for (let j = 0; j < bench.length; j++) {
-            if (draftkings[i] && (draftkings[i].Name === bench[j].name)) {
-                draftkings.splice(i, 1);
-            }
+// Utility functions //
+
+async function setTeamTotals() {
+    try {
+        let teamTotals = await getVegasData();
+        let sortedArray = [];
+        for (var team in teamTotals) {
+            sortedArray.push([team, teamTotals[team]]);
         }
+        sortedArray.sort(function(a, b) {
+            return a[1] - b[1];
+        });
+        let slicedArray = sortedArray.slice(Math.max(sortedArray.length - 10, 0));
+        var sortedObj = {}
+        slicedArray.forEach(function(item){
+            sortedObj[item[0]]=item[1]
+        });
+        topTenTeamTotals = Object.keys(sortedObj);
+        return topTenTeamTotals;
+    } catch (e) {
+        console.error('error getVegasOdds', e);
     }
-
-    findValue();
-
-} else {
-
-    findValue();
-
 }
 
-// ---------------------------------------------------------------------------------
-// 2. Find and Adjust Value Functions
-// ---------------------------------------------------------------------------------
 function adjustDefense(player) {
     let weakVsDST = [];
     let adjustByValue;
@@ -131,6 +127,55 @@ function adjustDefense(player) {
     players.push(player);
 }
 
+function adjustForTeamTotal(player) {
+    for (let k = 0; k < topTenTeamTotals.length; k++) {
+        if (player.team === topTenTeamTotals[k]) {
+            player.value = player.value * adjustForHighTeamTotal;
+            player.team = player.team + ' (high_total)';
+        }
+    }
+
+    player.value = parseInt(player.value.toFixed(2));
+    players.push(player);
+}
+
+
+
+// ---------------------------------------------------------------------------------
+// manually add players on IR or are out here
+// ---------------------------------------------------------------------------------
+let bench = benchedPlayers;
+
+// ---------------------------------------------------------------------------------
+// 1. Remove bench players and get vars from APIs
+// ---------------------------------------------------------------------------------
+async function getPlayersValue() {
+    if (bench.length) {
+        console.log('+------------------------+');
+        console.log('| removing bench players |');
+        console.log('+------------------------+');
+        for (let i = draftkings.length - 1; i >= 0; i--) {
+            for (let j = 0; j < bench.length; j++) {
+                if (draftkings[i] && (draftkings[i].Name === bench[j].name)) {
+                    draftkings.splice(i, 1);
+                }
+            }
+        }
+        // adjust for implied team total
+        await setTeamTotals();
+        findValue();
+
+    } else {
+
+        findValue();
+
+    }
+}
+getPlayersValue();
+
+// ---------------------------------------------------------------------------------
+// 2. Find Value
+// ---------------------------------------------------------------------------------
 
 async function findValue() {
 
@@ -186,6 +231,7 @@ async function findValue() {
 
                 // Adjust value if playing weaker dst
                 await adjustDefense(player);
+                await adjustForTeamTotal(player);
                 
             }
         }
@@ -225,22 +271,7 @@ async function findValue() {
 // 3. Build team
 // ---------------------------------------------------------------------------------
 
-async function getVegasOdds() {
-    try {
-        let finalVegasData = await getVegasData();
-        return finalVegasData;
-    } catch (e) {
-        console.error('error getVegasOdds', e);
-    }
-}
-
 async function buildTeam(array) {
-    console.log('+------------------------+');
-    console.log('| adjustedValues   |', adjustedValues);
-    console.log('+------------------------+');
-
-    // adjust for implied team total
-    await getVegasOdds();
 
     // sort players array by value (salary / avgpoints)
     array.sort((a, b) => (a.value > b.value) ? 1 : -1);

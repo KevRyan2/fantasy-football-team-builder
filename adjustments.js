@@ -6,7 +6,7 @@ const adjustedValues = {
 	weakDEFvsTE:  0.95,
 	weakOFFvsDST: 0.85,
 	// 2. Adjust for implied team total (vegas odds)
-	topHalfTeamTotal: 0.90
+	topHalfTeamTotal: 0.95
 }; 
 
 module.exports = adjustedValues;

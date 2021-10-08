@@ -63,25 +63,33 @@ async function getVegasData() {
     let teamOdds = {};
     for (let i = vegasData.totals.length - 1; i >= 0; i--) {
       let teamObj = vegasData.totals[i];
+      let teamObjSpreads = vegasData.spreads[i];
       let odds = teamObj.sites.filter((obj) => {
         const { site_key } = obj;
         return site_key === 'barstool';
       });
-      teamOdds[teamNameMap[teamObj.teams[0]]] = odds;
-      teamOdds[teamNameMap[teamObj.teams[1]]] = odds;
+      let spreads = teamObjSpreads.sites.filter((obj) => {
+        const { site_key } = obj;
+        return site_key === 'barstool';
+      });
+      teamOdds[teamNameMap[teamObj.teams[0]]] = Object.assign({}, { 
+        totals: odds[0].odds.totals,
+        spreads: spreads[0].odds.spreads
+      });
+      teamOdds[teamNameMap[teamObj.teams[1]]] = Object.assign({}, { 
+        totals: odds[0].odds.totals,
+        spreads: spreads[0].odds.spreads
+      });
     }
-    let filteredTeamOdds = {};
+
+    let teamTotals = {};
     Object.keys(teamOdds).forEach(function(teamKey) {
-      filteredTeamOdds[teamKey] = teamOdds[teamKey][0].odds.totals.points[0];
+      teamTotals[teamKey] = (teamOdds[teamKey].totals.points[0]/2) - (teamOdds[teamKey].spreads.points[0]/2);
     });
-    // let finalOdds = {};
-    // Object.keys(filteredTeamOdds).forEach(function(teamKey) {
-    //   finalOdds[teamKey] = filteredTeamOdds[teamKey].totals.points[0];
-    // });
-    console.log('+------------------------+');
-    console.log('| team data totals |', filteredTeamOdds);
-    console.log('+------------------------+');
-    return filteredTeamOdds;
+    // console.log('+------------------------+');
+    // console.log('| team data totals |', teamTotals);
+    // console.log('+------------------------+');
+    return teamTotals;
   } catch (e) {
     console.error('error with getVegasData', e);
     return e;
