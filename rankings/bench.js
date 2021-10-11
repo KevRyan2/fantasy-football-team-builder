@@ -30,6 +30,10 @@ const benchedPlayers = [
     {
         name: 'Marquez Valdes-Scantling',
         issue: 'out'
+    },
+    {
+        name: 'Rob Gronkowski',
+        issue: 'out'
     }
 ];
 

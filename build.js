@@ -23,18 +23,39 @@ const getVegasData   = require('./utilities/getOdds.js').getVegasOdds;
 // ---------------------------------------------------------------------------------
 // update this data weekly, set week-x to the week you want to build
 // ---------------------------------------------------------------------------------
-const dataDK = require('./data/week-5/draftkings.json'); // update this file weekly with csv data from draftkings website
+const weekNum = 'week-5'
+const dataDK = require(`./data/${weekNum}/draftkings.json`); // update this file weekly with csv data from draftkings website
 const draftkings = [...dataDK];
 
 // ---------------------------------------------------------------------------------
 // order of player replacements when rebuilding
 // ---------------------------------------------------------------------------------
-const replacements = ['WR', 'WR', 'DST', 'DST', 'RB', 'RB', 'WR', 'WR', 'DST', 'DST', 'TE', 'TE', 'TE', 'TE', 'TE', 'DST', 'DST', 'QB', 'QB', 'QB', 'WR', 'WR', 'WR', 'WR', 'WR', 'QB', 'QB', 'DST', 'DST', 'DST', 'DST', 'WR', 'QB', 'QB', 'WR', 'WR', 'DST', 'WR', 'TE', 'TE', 'WR', 'QB', 'DST', 'DST', 'DST', 'DST', 'QB', 'TE', 'TE', 'WR',
+const replacements = ['WR', 'WR', 'RB', 'RB', 'TE', 'DST', 'WR', 'WR', 'DST', 'DST', 'TE', 'TE', 'TE', 'TE', 'TE', 'DST', 'DST', 'QB', 'QB', 'QB', 'WR', 'WR', 'WR', 'WR', 'WR', 'QB', 'QB', 'DST', 'DST', 'DST', 'DST', 'WR', 'QB', 'QB', 'WR', 'WR', 'DST', 'WR', 'TE', 'TE', 'WR', 'QB', 'DST', 'DST', 'DST', 'DST', 'QB', 'TE', 'TE', 'WR',
     'DST'];
+
+// ---------------------------------------------------------------------------------
+// Variables
+// ---------------------------------------------------------------------------------
+// 1. Adjust for weak opponent against position
+const adjustWeakDST = adjustedValues.weakDefense; 
+const adjustWeakDEFvsQB = adjustedValues.weakDEFvsQB; 
+const adjustWeakDEFvsRB = adjustedValues.weakDEFvsRB;
+const adjustWeakDEFvsWR = adjustedValues.weakDEFvsWR;
+const adjustWeakDEFvsTE = adjustedValues.weakDEFvsTE; 
+const adjustWeakOFFvsDST = adjustedValues.weakOFFvsDST;
+const adjustForHighTeamTotal = adjustedValues.topHalfTeamTotal
+
+const players = []; // array of players sorted by value to build a team from
+const waivers = []; // array of players removed from the team
+const allowedSalary = 50000; // manually change if draftkings salary is different
+const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
+const pointsTarget = 150; // minimumum total player points of entire team aiming for
+let replacement = 0; // increments on each replacement
+let topTenTeamTotals = [];
 
 
 // ---------------------------------------------------------------------------------
-// Arrays for Adjustments & Settings
+// Utility functions
 // ---------------------------------------------------------------------------------
 
 /* Weak Opponent DST - CBS Sports by position */
@@ -52,31 +73,6 @@ const weakDSTvsQB = calcWorst10Data(defenseVsQB);
 const weakDSTvsRB = calcWorst10Data(defenseVsRB);
 const weakDSTvsWR = calcWorst10Data(defenseVsWR);
 const weakDSTvsTE = calcWorst10Data(defenseVsTE);
-
-// ---------------------------------------------------------------------------------
-// Adjustment Variables
-// ---------------------------------------------------------------------------------
-// 1. Adjust for weak opponent against position
-const adjustWeakDST = adjustedValues.weakDefense; 
-const adjustWeakDEFvsQB = adjustedValues.weakDEFvsQB; 
-const adjustWeakDEFvsRB = adjustedValues.weakDEFvsRB;
-const adjustWeakDEFvsWR = adjustedValues.weakDEFvsWR;
-const adjustWeakDEFvsTE = adjustedValues.weakDEFvsTE; 
-const adjustWeakOFFvsDST = adjustedValues.weakOFFvsDST;
-const adjustForHighTeamTotal = adjustedValues.topHalfTeamTotal
-
-
-// General Vars
-const players = []; // array of players sorted by value to build a team from
-const waivers = []; // array of players removed from the team
-const allowedSalary = 50000; // manually change if draftkings salary is different
-const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
-const pointsTarget = 150; // minimumum total player points of entire team aiming for
-let replacement = 0; // increments on each replacement
-let topTenTeamTotals = [];
-
-
-// Utility functions //
 
 async function setTeamTotals() {
     try {
@@ -173,6 +169,14 @@ async function getPlayersValue() {
 }
 getPlayersValue();
 
+async function getUniqueListBy(arr, key) {
+    try {
+      return [...new Map(arr.map(item => [item[key], item])).values()]
+    } catch (e) {
+        console.error('getUniqueListBy error', e);
+    }
+}
+
 // ---------------------------------------------------------------------------------
 // 2. Find Value
 // ---------------------------------------------------------------------------------
@@ -262,9 +266,16 @@ async function findValue() {
     }
 
     console.log('+------------------------+');
-    console.log('| building team          |');
+    console.log('| building team, find unique |');
     console.log('+------------------------+');
-    buildTeam(players);
+    let filteredPlayers = await getUniqueListBy(players, 'name');
+    buildTeam(filteredPlayers);
+    // Write values to file
+    let jsondata = JSON.stringify(filteredPlayers);
+
+    fs.writeFile(`./data/${weekNum}/teamValue.json`, jsondata, function (err) {
+        if (err) throw err;
+    });
 }
 
 // ---------------------------------------------------------------------------------
@@ -606,6 +617,8 @@ async function buildTeam(array) {
         console.log('+------------------------+');
         rebuildTeam();
 
+    //} else if (mostPlayersOneTeam > 2) {
+
     } else {
 
         console.log('+------------------------+');
@@ -654,9 +667,6 @@ async function buildTeam(array) {
 
             } else {
 
-                // if offense against defense, rebuild https://github.com/BenBrostoff/draftfast
-                // 
-
                 let finalteam = team;
                 let totalsalary = 0;
                 let totalavg = 0;
@@ -670,7 +680,7 @@ async function buildTeam(array) {
                 finalteam.total.avgpoints = parseInt(totalavg.toFixed(2));
                 let jsondata = JSON.stringify(finalteam);
 
-                fs.writeFile('./team.json', jsondata, function (err) {
+                fs.writeFile(`./data/${weekNum}/team.json`, jsondata, function (err) {
                     if (err) throw err;
                 });
 
