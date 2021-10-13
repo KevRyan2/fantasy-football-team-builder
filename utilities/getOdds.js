@@ -1,8 +1,9 @@
+const fs = require('fs');
 var axios = require("axios").default;
 var api_key = require('../env.json')['rapid_api_key'];
 const teamNameMap = require('../data/teamFullNameMap.json');
 // Testing
-const testVegasData = require('../data/testVegasOdds.json');
+const testVegasData = require('../data/week-6/testVegasOdds.json');
 
 // Get the game totals
 var totalsOptions = {
@@ -41,25 +42,17 @@ var spreadOptions = {
 async function getVegasData() {
   try {
     //TESTING
-    let vegasData = {
-     totals: testVegasData.totals.data,
-     spreads: testVegasData.spreads.data
-   };
+      let vegasData = {
+       totals: testVegasData.totals.data,
+       spreads: testVegasData.spreads.data
+     };
     //PROD
     // let totals = await axios.request(totalsOptions);
     // let spreads = await axios.request(spreadOptions);
-    // let vegasData = {
-    //   totals: totals.data,
-    //   spreads: spreads.data
-    // };
-    // let jsondata = JSON.stringify(vegasData);
-    // console.log('+------------------------+');
-    // console.log('| stringify vegas data |', jsondata);
-    // console.log('+------------------------+');
-    // fs.writeFile('./data/testVegasOdds.json', jsondata, function (err) {
-    //  if (err) throw err;
-    // });
-    // return jsondata;
+    //  let vegasData = {
+    //    totals: totals.data,
+    //    spreads: spreads.data
+    //  };
     let teamOdds = {};
     for (let i = vegasData.totals.length - 1; i >= 0; i--) {
       let teamObj = vegasData.totals[i];
@@ -86,9 +79,12 @@ async function getVegasData() {
     Object.keys(teamOdds).forEach(function(teamKey) {
       teamTotals[teamKey] = (teamOdds[teamKey].totals.points[0]/2) - (teamOdds[teamKey].spreads.points[0]/2);
     });
-    // console.log('+------------------------+');
-    // console.log('| team data totals |', teamTotals);
-    // console.log('+------------------------+');
+    // let jsondata = JSON.stringify(vegasData);
+    // const weekNum = 'week-6'
+    // fs.writeFile(`./data/${weekNum}/testVegasOdds.json`, jsondata, function (err) {
+    //  if (err) throw err;
+    // });
+    // return jsondata;
     return teamTotals;
   } catch (e) {
     console.error('error with getVegasData', e);
@@ -96,7 +92,7 @@ async function getVegasData() {
   }
 }
 
-
+getVegasData();
 
 
 module.exports = { 

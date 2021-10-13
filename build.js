@@ -1,12 +1,8 @@
 const fs = require('fs');
 const adjustedValues = require('./adjustments');
-const defenseVsQB = require('./rankings/defenseVsQB.json');
-const defenseVsRB = require('./rankings/defenseVsRB.json');
-const defenseVsWR = require('./rankings/defenseVsWR.json');
-const defenseVsTE = require('./rankings/defenseVsTE.json');
 const mapTeamNicknameAbbrev = require('./data/nicknameTeamMap.json');
-const benchedPlayers = require('./rankings/bench');
 const getVegasData   = require('./utilities/getOdds.js').getVegasOdds;
+let benchedPlayers = require('./rankings/bench');
 // const testVegasData = require('./data/testVegasOdds.json');
 
 /*
@@ -23,9 +19,14 @@ const getVegasData   = require('./utilities/getOdds.js').getVegasOdds;
 // ---------------------------------------------------------------------------------
 // update this data weekly, set week-x to the week you want to build
 // ---------------------------------------------------------------------------------
-const weekNum = 'week-5'
+const weekNum = 'week-6';
+const defenseVsQB = require(`./data/${weekNum}/defenseVsQB.json`);
+const defenseVsRB = require(`./data/${weekNum}/defenseVsRB.json`);
+const defenseVsWR = require(`./data/${weekNum}/defenseVsWR.json`);
+const defenseVsTE = require(`./data/${weekNum}/defenseVsTE.json`);
 const dataDK = require(`./data/${weekNum}/draftkings.json`); // update this file weekly with csv data from draftkings website
 const draftkings = [...dataDK];
+const maxPlayersPerTeam = 2;
 
 // ---------------------------------------------------------------------------------
 // order of player replacements when rebuilding
@@ -45,7 +46,7 @@ const adjustWeakDEFvsTE = adjustedValues.weakDEFvsTE;
 const adjustWeakOFFvsDST = adjustedValues.weakOFFvsDST;
 const adjustForHighTeamTotal = adjustedValues.topHalfTeamTotal
 
-const players = []; // array of players sorted by value to build a team from
+let players = []; // array of players sorted by value to build a team from
 const waivers = []; // array of players removed from the team
 const allowedSalary = 50000; // manually change if draftkings salary is different
 const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
@@ -135,6 +136,60 @@ function adjustForTeamTotal(player) {
     players.push(player);
 }
 
+// Prevent duplicate entries
+async function getUniqueListBy(arr, key) {
+    try {
+      return [...new Map(arr.map(item => [item[key], item])).values()]
+    } catch (e) {
+        console.error('getUniqueListBy error', e);
+    }
+}
+
+// Prevent > x number of players per team
+async function tooManyPlayersOnSameTeam(teamObj) {
+    try {
+        let sameTeamArr = []; 
+        let reducedTeamArr = Object.keys(teamObj).map(key => {
+            return teamObj[key];
+        });
+        await reducedTeamArr.every((player, index) => { 
+             for (let k = 0; k < reducedTeamArr.length; k++) {
+                if (player.team === reducedTeamArr[k].team) {
+                    sameTeamArr.push(reducedTeamArr[k]);
+                }
+            }
+        });
+        let uniqueSameTeam = [...new Map(sameTeamArr.map(item => [item['name'], item])).values()];
+        let groupedSameTeams = uniqueSameTeam.reduce((r, o) => {
+            var last = r[r.length - 1];
+            if (last && last[0].team === o.team) {
+                last.push(o);
+            } else {
+                r.push([o]);
+            }
+            return r;
+        }, []);
+        let tooManyFromTeam = [];
+        for (let i = 0; i < groupedSameTeams.length; i++) {
+            if (groupedSameTeams[i].length > maxPlayersPerTeam){
+                tooManyFromTeam.push(groupedSameTeams[i]);
+            }
+        }
+        console.log('tooManyFromTeam', tooManyFromTeam);
+        return tooManyFromTeam;
+    } catch (e) {
+        console.error('getUniqueListBy error', e);
+    }
+}
+
+async function getTeamPlayersFromSameTeam(arr, numPerTeam) {
+    // try {
+    //   return [...new Map(arr.map(item => [item[key], item])).values()]
+    // } catch (e) {
+    //     console.error('getUniqueListBy error', e);
+    // }
+}
+
 
 
 // ---------------------------------------------------------------------------------
@@ -168,14 +223,6 @@ async function getPlayersValue() {
     }
 }
 getPlayersValue();
-
-async function getUniqueListBy(arr, key) {
-    try {
-      return [...new Map(arr.map(item => [item[key], item])).values()]
-    } catch (e) {
-        console.error('getUniqueListBy error', e);
-    }
-}
 
 // ---------------------------------------------------------------------------------
 // 2. Find Value
@@ -278,14 +325,18 @@ async function findValue() {
     });
 }
 
+async function uniqueArray (arr) {
+    return [...new Map(arr.map(item => [item['name'], item])).values()];
+}
+
 // ---------------------------------------------------------------------------------
 // 3. Build team
 // ---------------------------------------------------------------------------------
 
-async function buildTeam(array) {
+async function buildTeam(playerArray) {
 
     // sort players array by value (salary / avgpoints)
-    array.sort((a, b) => (a.value > b.value) ? 1 : -1);
+    playerArray.sort((a, b) => (a.value > b.value) ? 1 : -1);
 
     // ---------------------------------------------------------------------------------
     // blank team template
@@ -388,11 +439,11 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign qb1 by best value
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'QB') {
-            if (array[i].value <= team.qb1.value) {
-                if (array[i].salary < team.qb1.salary) {
-                    team.qb1 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'QB') {
+            if (playerArray[i].value <= team.qb1.value) {
+                if (playerArray[i].salary < team.qb1.salary) {
+                    team.qb1 = playerArray[i];
                 }
             }
         }
@@ -401,10 +452,10 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign wr1 by best value
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'WR') {
-            if (array[i].value <= team.wr1.value) {
-                team.wr1 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'WR') {
+            if (playerArray[i].value <= team.wr1.value) {
+                team.wr1 = playerArray[i];
             }
         }
     }
@@ -412,12 +463,12 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign wr2 by best value
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'WR') {
-            if (array[i].value < team.wr2.value) {
-                if (array[i].salary < team.wr2.salary) {
-                    if (array[i].name != team.wr1.name) {
-                        team.wr2 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'WR') {
+            if (playerArray[i].value < team.wr2.value) {
+                if (playerArray[i].salary < team.wr2.salary) {
+                    if (playerArray[i].name != team.wr1.name) {
+                        team.wr2 = playerArray[i];
                     }
                 }
             }
@@ -427,12 +478,12 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign best wr3 by best value
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'WR') {
-            if (array[i].value < team.wr3.value) {
-                if (array[i].name != team.wr1.name) {
-                    if (array[i].name != team.wr2.name) {
-                        team.wr3 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'WR') {
+            if (playerArray[i].value < team.wr3.value) {
+                if (playerArray[i].name != team.wr1.name) {
+                    if (playerArray[i].name != team.wr2.name) {
+                        team.wr3 = playerArray[i];
                     }
                 }
             }
@@ -442,11 +493,11 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign best dst1 by best value
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'DST') {
-            if (array[i].salary <= 2300) {
-                if (array[i].value < team.dst1.value) {
-                    team.dst1 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'DST') {
+            if (playerArray[i].salary <= 2300) {
+                if (playerArray[i].value < team.dst1.value) {
+                    team.dst1 = playerArray[i];
                 }
             }
         }
@@ -455,12 +506,12 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign best value te1 under 6k salary
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'TE') {
-            if (array[i].salary <= 6000) {
-                if (array[i].value < team.te1.value) {
-                    if (array[i].name != team.fx1.name) {
-                        team.te1 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'TE') {
+            if (playerArray[i].salary <= 6000) {
+                if (playerArray[i].value < team.te1.value) {
+                    if (playerArray[i].name != team.fx1.name) {
+                        team.te1 = playerArray[i];
                     }
                 }
             }
@@ -470,10 +521,10 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign best rb1 by best value
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'RB') {
-            if (array[i].value < team.rb1.value) {
-                team.rb1 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'RB') {
+            if (playerArray[i].value < team.rb1.value) {
+                team.rb1 = playerArray[i];
             }
         }
     }
@@ -481,12 +532,12 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign cheapest rb2 by best value
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].position === 'RB') {
-            if (array[i].value < team.rb2.value) {
-                if (array[i].salary < team.rb2.salary) {
-                    if (array[i].name != team.rb1.name) {
-                        team.rb2 = array[i];
+    for (let i = 0; i < playerArray.length; i++) {
+        if (playerArray[i].position === 'RB') {
+            if (playerArray[i].value < team.rb2.value) {
+                if (playerArray[i].salary < team.rb2.salary) {
+                    if (playerArray[i].name != team.rb1.name) {
+                        team.rb2 = playerArray[i];
                     }
                 }
             }
@@ -501,12 +552,12 @@ async function buildTeam(array) {
         const leftsalary = 50000 - tempsalary;
         if (leftsalary <= 5500) {
             const oldwr1 = team.wr1.name;
-            for (let i = 0; i < array.length; i++) {
-                if (array[i].position === 'WR') {
-                    if (array[i].salary <= 6000) {
-                        if (array[i].value < 100) {
-                            if (array[i].name != oldwr1) {
-                                team.wr1 = array[i];
+            for (let i = 0; i < playerArray.length; i++) {
+                if (playerArray[i].position === 'WR') {
+                    if (playerArray[i].salary <= 6000) {
+                        if (playerArray[i].value < 100) {
+                            if (playerArray[i].name != oldwr1) {
+                                team.wr1 = playerArray[i];
                             }
                         }
                     }
@@ -518,20 +569,20 @@ async function buildTeam(array) {
     // ---------------------------------------------------------------------------------
     // assign fx1 position based on remaining salary
     // ---------------------------------------------------------------------------------
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < playerArray.length; i++) {
         if (team.qb1.name && team.rb1.name && team.rb2.name && team.wr1.name && team.wr2.name && team.wr3.name && team.te1.name && team.dst1.name) {
             const tempsalary = team.qb1.salary + team.rb1.salary + team.rb2.salary + team.wr1.salary + team.wr2.salary + team.wr3.salary + team.te1.salary + team.dst1.salary;
             const leftsalary = 50000 - tempsalary;
-            if ((array[i].position === 'RB') || (array[i].position === 'WR') || (array[i].position === 'TE')) {
-                if (array[i].value < team.fx1.value) {
-                    if (array[i].name != team.rb1.name) {
-                        if (array[i].name != team.rb2.name) {
-                            if (array[i].name != team.wr1.name) {
-                                if (array[i].name != team.wr2.name) {
-                                    if (array[i].name != team.wr3.name) {
-                                        if (array[i].name != team.te1.name) {
-                                            if (array[i].salary === leftsalary) {
-                                                team.fx1 = array[i];
+            if ((playerArray[i].position === 'RB') || (playerArray[i].position === 'WR') || (playerArray[i].position === 'TE')) {
+                if (playerArray[i].value < team.fx1.value) {
+                    if (playerArray[i].name != team.rb1.name) {
+                        if (playerArray[i].name != team.rb2.name) {
+                            if (playerArray[i].name != team.wr1.name) {
+                                if (playerArray[i].name != team.wr2.name) {
+                                    if (playerArray[i].name != team.wr3.name) {
+                                        if (playerArray[i].name != team.te1.name) {
+                                            if (playerArray[i].salary === leftsalary) {
+                                                team.fx1 = playerArray[i];
                                             }
                                         }
                                     }
@@ -548,19 +599,19 @@ async function buildTeam(array) {
     // double check for open fx1
     // ---------------------------------------------------------------------------------
     if (team.fx1.name === '') {
-        for (let i = 0; i < array.length; i++) {
+        for (let i = 0; i < playerArray.length; i++) {
             if (team.qb1.name && team.rb1.name && team.rb2.name && team.wr1.name && team.wr2.name && team.wr3.name && team.te1.name && team.dst1.name) {
                 const tempsalary = team.qb1.salary + team.rb1.salary + team.rb2.salary + team.wr1.salary + team.wr2.salary + team.wr3.salary + team.te1.salary + team.dst1.salary;
                 const leftsalary = 50000 - tempsalary;
-                if ((array[i].position === 'RB') || (array[i].position === 'WR') || (array[i].position === 'TE')) {
-                    if (array[i].name != team.rb1.name) {
-                        if (array[i].name != team.rb2.name) {
-                            if (array[i].name != team.wr1.name) {
-                                if (array[i].name != team.wr2.name) {
-                                    if (array[i].name != team.wr3.name) {
-                                        if (array[i].name != team.te1.name) {
-                                            if (array[i].salary <= leftsalary) {
-                                                team.fx1 = array[i];
+                if ((playerArray[i].position === 'RB') || (playerArray[i].position === 'WR') || (playerArray[i].position === 'TE')) {
+                    if (playerArray[i].name != team.rb1.name) {
+                        if (playerArray[i].name != team.rb2.name) {
+                            if (playerArray[i].name != team.wr1.name) {
+                                if (playerArray[i].name != team.wr2.name) {
+                                    if (playerArray[i].name != team.wr3.name) {
+                                        if (playerArray[i].name != team.te1.name) {
+                                            if (playerArray[i].salary <= leftsalary) {
+                                                team.fx1 = playerArray[i];
                                             }
                                         }
                                     }
@@ -581,10 +632,10 @@ async function buildTeam(array) {
         const leftsalary = 50000 - tempsalary;
         if (leftsalary > 0) {
             const olddst1 = team.dst1.salary;
-            for (let i = 0; i < array.length; i++) {
-                if (array[i].position === 'DST') {
-                    if (array[i].salary === (leftsalary + olddst1)) {
-                        team.dst1 = array[i];
+            for (let i = 0; i < playerArray.length; i++) {
+                if (playerArray[i].position === 'DST') {
+                    if (playerArray[i].salary === (leftsalary + olddst1)) {
+                        team.dst1 = playerArray[i];
                     }
                 }
             }
@@ -595,6 +646,20 @@ async function buildTeam(array) {
     const overSalary = totalSalary - allowedSalary;
     const totalPoints = team.qb1.avgpoints + team.rb1.avgpoints + team.rb2.avgpoints + team.wr1.avgpoints + team.wr2.avgpoints + team.wr3.avgpoints + team.te1.avgpoints + team.fx1.avgpoints + team.dst1.avgpoints;
     const underPoints = pointsTarget - totalPoints;
+    const tooManyPlayersOnSameTeamArr = await tooManyPlayersOnSameTeam(team);
+    let playersUpdated = [];
+    // Array of teams's players chunked
+     for (let q = 0; q < tooManyPlayersOnSameTeamArr.length; q++) {
+        // Array of players per team
+        for (let j = 0; j < tooManyPlayersOnSameTeamArr[q].length; j++) {
+            playerArray.map((player) => {
+                if (tooManyPlayersOnSameTeamArr[q][j].name !== player.name) {
+                    playersUpdated.push(player);
+                }
+            });
+        }
+     };
+     let updatedUniquePlayers = await uniqueArray(playersUpdated);
 
     if (underPoints > 0) {
 
@@ -617,7 +682,18 @@ async function buildTeam(array) {
         console.log('+------------------------+');
         rebuildTeam();
 
-    //} else if (mostPlayersOneTeam > 2) {
+    //} else if (tooManyPlayersOnSameTeamArr.length > 0) {
+
+        /* Remove lowest value player in lineup from team w/ duplicate entries to bench */
+        // players = await players.filter((player) =>  {
+        //     if (player.name !== return player
+        //      console.log('playersFromSameTeam', playersFromSameTeam);
+        //      //await removeLowestValuePlayer(playersFromSameTeam);
+        //  });
+        // console.log('+------------------------+');
+        // console.log('| rebuilding team, too many players on single team |');
+        // console.log('+------------------------+');
+        // rebuildTeam();
 
     } else {
 
@@ -634,7 +710,7 @@ async function buildTeam(array) {
                             if (waivers[j].avgpoints > team[i].avgpoints) {
                                 if (waivers[j].salary < (team[i].salary + (overSalary * -1))) {
                                     // pull off waivers
-                                    players.push(waivers[j]);
+                                    playerArray.push(waivers[j]);
                                     waivers.splice(j, 1);
                                     freeagent = true;
                                 }
