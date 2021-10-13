@@ -1,8 +1,10 @@
 const fs = require('fs');
 const adjustedValues = require('./adjustments');
 const mapTeamNicknameAbbrev = require('./data/nicknameTeamMap.json');
-const getVegasData   = require('./utilities/getOdds.js').getVegasOdds;
+const getTeamTotals   = require('./utilities/getTeamTotals.js').getTeamTotals;
+const calcFavorableDSTvsPos = require ('./utilities/calcFavorableDSTvsPos.js').calcFavorableDSTvsPos;
 let benchedPlayers = require('./rankings/bench');
+let standardTeamObject = require('./utilities/teamObject.json');
 // const testVegasData = require('./data/testVegasOdds.json');
 
 /*
@@ -17,7 +19,7 @@ let benchedPlayers = require('./rankings/bench');
 */
 
 // ---------------------------------------------------------------------------------
-// update this data weekly, set week-x to the week you want to build
+// Weekly Vars - set week-x to the week you want to build
 // ---------------------------------------------------------------------------------
 const weekNum = 'week-6';
 const defenseVsQB = require(`./data/${weekNum}/defenseVsQB.json`);
@@ -25,11 +27,9 @@ const defenseVsRB = require(`./data/${weekNum}/defenseVsRB.json`);
 const defenseVsWR = require(`./data/${weekNum}/defenseVsWR.json`);
 const defenseVsTE = require(`./data/${weekNum}/defenseVsTE.json`);
 const dataDK = require(`./data/${weekNum}/draftkings.json`); // update this file weekly with csv data from draftkings website
-const draftkings = [...dataDK];
-const maxPlayersPerTeam = 2;
 
 // ---------------------------------------------------------------------------------
-// order of player replacements when rebuilding
+// Order of player replacements when rebuilding
 // ---------------------------------------------------------------------------------
 const replacements = ['WR', 'WR', 'RB', 'RB', 'TE', 'DST', 'WR', 'WR', 'DST', 'DST', 'TE', 'TE', 'TE', 'TE', 'TE', 'DST', 'DST', 'QB', 'QB', 'QB', 'WR', 'WR', 'WR', 'WR', 'WR', 'QB', 'QB', 'DST', 'DST', 'DST', 'DST', 'WR', 'QB', 'QB', 'WR', 'WR', 'DST', 'WR', 'TE', 'TE', 'WR', 'QB', 'DST', 'DST', 'DST', 'DST', 'QB', 'TE', 'TE', 'WR',
     'DST'];
@@ -37,7 +37,19 @@ const replacements = ['WR', 'WR', 'RB', 'RB', 'TE', 'DST', 'WR', 'WR', 'DST', 'D
 // ---------------------------------------------------------------------------------
 // Variables
 // ---------------------------------------------------------------------------------
-// 1. Adjust for weak opponent against position
+const draftkings = [...dataDK];
+const maxPlayersPerTeam = 2;
+let players = [];
+const waivers = []; // List of removed players
+const allowedSalary = 50000;
+const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
+const pointsTarget = 150; // minimumum total player points of entire team aiming for
+let replacement = 0; // increments on each replacement
+let topTeamTotals = [];
+const numTopTeamTotals = 10;
+const positionToUpgrade = 'RB'; // Choose WR if PPR
+
+// Adjust for weak opponent against position
 const adjustWeakDST = adjustedValues.weakDefense; 
 const adjustWeakDEFvsQB = adjustedValues.weakDEFvsQB; 
 const adjustWeakDEFvsRB = adjustedValues.weakDEFvsRB;
@@ -46,58 +58,28 @@ const adjustWeakDEFvsTE = adjustedValues.weakDEFvsTE;
 const adjustWeakOFFvsDST = adjustedValues.weakOFFvsDST;
 const adjustForHighTeamTotal = adjustedValues.topHalfTeamTotal
 
-let players = []; // array of players sorted by value to build a team from
-const waivers = []; // array of players removed from the team
-const allowedSalary = 50000; // manually change if draftkings salary is different
-const salaryBuffer = -2000; // amount under allowedSalary willing not to spend
-const pointsTarget = 150; // minimumum total player points of entire team aiming for
-let replacement = 0; // increments on each replacement
-let topTenTeamTotals = [];
+// Worst team DST against specific positions
+const numFavorableTeams = 10;
+const weakDSTvsQB = calcFavorableDSTvsPos(defenseVsQB, numFavorableTeams);
+const weakDSTvsRB = calcFavorableDSTvsPos(defenseVsRB, numFavorableTeams);
+const weakDSTvsWR = calcFavorableDSTvsPos(defenseVsWR, numFavorableTeams);
+const weakDSTvsTE = calcFavorableDSTvsPos(defenseVsTE, numFavorableTeams);
 
 
 // ---------------------------------------------------------------------------------
-// Utility functions
+// Utility function results/definitions
 // ---------------------------------------------------------------------------------
-
-/* Weak Opponent DST - CBS Sports by position */
-function calcWorst10Data(defenseArray) {
-    let bottom10Data = defenseArray.slice(0, 10);
-    let teams = [];
-    for (let i = bottom10Data.length - 1; i >= 0; i--) {
-        const def_full = bottom10Data[i]['TEAM'].substr(6);
-        const def_abbrev = mapTeamNicknameAbbrev[def_full];
-        teams.push(def_abbrev);
-    }
-    return teams;
-}
-const weakDSTvsQB = calcWorst10Data(defenseVsQB);
-const weakDSTvsRB = calcWorst10Data(defenseVsRB);
-const weakDSTvsWR = calcWorst10Data(defenseVsWR);
-const weakDSTvsTE = calcWorst10Data(defenseVsTE);
-
 async function setTeamTotals() {
     try {
-        let teamTotals = await getVegasData();
-        let sortedArray = [];
-        for (var team in teamTotals) {
-            sortedArray.push([team, teamTotals[team]]);
-        }
-        sortedArray.sort(function(a, b) {
-            return a[1] - b[1];
-        });
-        let slicedArray = sortedArray.slice(Math.max(sortedArray.length - 10, 0));
-        var sortedObj = {}
-        slicedArray.forEach(function(item){
-            sortedObj[item[0]]=item[1]
-        });
-        topTenTeamTotals = Object.keys(sortedObj);
-        return topTenTeamTotals;
+        let teamTotals = await getTeamTotals(numTopTeamTotals);
+        topTeamTotals = teamTotals;
+        return topTeamTotals;
     } catch (e) {
         console.error('error getVegasOdds', e);
     }
 }
 
-function adjustDefense(player) {
+function adjustPlayerForDST(player) {
     let weakVsDST = [];
     let adjustByValue;
     if (player.position.indexOf('QB') > -1) {
@@ -125,8 +107,8 @@ function adjustDefense(player) {
 }
 
 function adjustForTeamTotal(player) {
-    for (let k = 0; k < topTenTeamTotals.length; k++) {
-        if (player.team === topTenTeamTotals[k]) {
+    for (let k = 0; k < topTeamTotals.length; k++) {
+        if (player.team === topTeamTotals[k]) {
             player.value = player.value * adjustForHighTeamTotal;
             player.team = player.team + ' (high_total)';
         }
@@ -212,16 +194,20 @@ async function getPlayersValue() {
                 }
             }
         }
-        // adjust for implied team total
+        // Setup data to adjust for implied team total
         await setTeamTotals();
         findValue();
 
     } else {
 
+        // Setup data to adjust for implied team total
+        await setTeamTotals();
         findValue();
 
     }
 }
+
+/* START RUNNING THE SCRIPT */
 getPlayersValue();
 
 // ---------------------------------------------------------------------------------
@@ -230,9 +216,9 @@ getPlayersValue();
 
 async function findValue() {
 
-    // ---------------------------------------------------------------------------------
-    // loop over player data and sort by value
-    // ---------------------------------------------------------------------------------
+    // -------------------------
+    // A. Sort players by value
+    // -------------------------
     console.log('+------------------------+');
     console.log('| finding player value   |');
     console.log('+------------------------+');
@@ -281,16 +267,16 @@ async function findValue() {
                 player.time = time;
 
                 // Adjust value if playing weaker dst
-                await adjustDefense(player);
+                await adjustPlayerForDST(player);
                 await adjustForTeamTotal(player);
                 
             }
         }
     }
 
-    // ---------------------------------------------------------------------------------
-    // loop over defense data and sort by value
-    // ---------------------------------------------------------------------------------
+    // ---------------------
+    // B. Sort DST by value
+    // ---------------------
     console.log('+------------------------+');
     console.log('| finding defense value  |');
     console.log('+------------------------+');
@@ -325,10 +311,6 @@ async function findValue() {
     });
 }
 
-async function uniqueArray (arr) {
-    return [...new Map(arr.map(item => [item['name'], item])).values()];
-}
-
 // ---------------------------------------------------------------------------------
 // 3. Build team
 // ---------------------------------------------------------------------------------
@@ -338,103 +320,10 @@ async function buildTeam(playerArray) {
     // sort players array by value (salary / avgpoints)
     playerArray.sort((a, b) => (a.value > b.value) ? 1 : -1);
 
-    // ---------------------------------------------------------------------------------
-    // blank team template
-    // ---------------------------------------------------------------------------------
-    const team = {
-        qb1: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        rb1: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        rb2: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        wr1: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        wr2: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        wr3: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        te1: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        fx1: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            opponent: '',
-            time: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        dst1: {
-            name: '',
-            salary: 10000,
-            position: '',
-            team: '',
-            avgpoints: 0,
-            value: 1000
-        },
-        total: {
-            salary: 0,
-            avgpoints: 0
-        }
-    };
+    // -------------------
+    // Blank team template
+    // -------------------
+    const team = standardTeamObject;
 
     // ---------------------------------------------------------------------------------
     // assign qb1 by best value
@@ -659,7 +548,7 @@ async function buildTeam(playerArray) {
             });
         }
      };
-     let updatedUniquePlayers = await uniqueArray(playersUpdated);
+    let updatedUniquePlayers = await getUniqueListBy(playersUpdated, 'name');
 
     if (underPoints > 0) {
 

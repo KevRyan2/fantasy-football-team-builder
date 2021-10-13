@@ -1,0 +1,94 @@
+{
+    "qb1": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "rb1": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "rb2": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "wr1": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "wr2": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "wr3": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "te1": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "fx1": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "opponent": "",
+        "time": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "dst1": {
+        "name": "",
+        "salary": 10000,
+        "position": "",
+        "team": "",
+        "avgpoints": 0,
+        "value": 1000
+    },
+    "total": {
+        "salary": 0,
+        "avgpoints": 0
+    }
+}

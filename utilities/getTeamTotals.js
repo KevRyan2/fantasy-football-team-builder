@@ -2,8 +2,9 @@ const fs = require('fs');
 var axios = require("axios").default;
 var api_key = require('../env.json')['rapid_api_key'];
 const teamNameMap = require('../data/teamFullNameMap.json');
-// Testing
-const testVegasData = require('../data/week-6/testVegasOdds.json');
+// Testing or after it's already been run
+const weekNum = 'week-6';
+const testVegasData = require(`../data/${weekNum}/testVegasOdds.json`);
 
 // Get the game totals
 var totalsOptions = {
@@ -38,15 +39,36 @@ var spreadOptions = {
     'x-rapidapi-key': api_key
   }
 };
-
-async function getVegasData() {
+async function setTeamTotalFromData (teamTotals, numTopTeamTotals) {
   try {
-    //TESTING
+    let sortedArray = [];
+    for (var team in teamTotals) {
+        sortedArray.push([team, teamTotals[team]]);
+    }
+    sortedArray.sort(function(a, b) {
+        return a[1] - b[1];
+    });
+    let slicedArray = sortedArray.slice(Math.max(sortedArray.length - numTopTeamTotals, 0));
+    var sortedObj = {}
+    slicedArray.forEach(function(item){
+        sortedObj[item[0]]=item[1]
+    });
+    topTenTeamTotals = Object.keys(sortedObj);
+    return topTenTeamTotals;
+  } catch (e) {
+    console.error('error in setTeamTotalFromData', e);
+  }
+}
+
+async function getTeamTotals(numTopTeamTotals) {
+  try {
+    // TESTING
       let vegasData = {
-       totals: testVegasData.totals.data,
-       spreads: testVegasData.spreads.data
-     };
-    //PROD
+        totals: testVegasData.totals.data,
+        spreads: testVegasData.spreads.data
+      };
+    // PROD 
+    // ONCE PER WEEK
     // let totals = await axios.request(totalsOptions);
     // let spreads = await axios.request(spreadOptions);
     //  let vegasData = {
@@ -79,24 +101,23 @@ async function getVegasData() {
     Object.keys(teamOdds).forEach(function(teamKey) {
       teamTotals[teamKey] = (teamOdds[teamKey].totals.points[0]/2) - (teamOdds[teamKey].spreads.points[0]/2);
     });
+    // ONCE PER WEEK
     // let jsondata = JSON.stringify(vegasData);
-    // const weekNum = 'week-6'
     // fs.writeFile(`./data/${weekNum}/testVegasOdds.json`, jsondata, function (err) {
     //  if (err) throw err;
     // });
-    // return jsondata;
-    return teamTotals;
+    let finalTeamTotals = await setTeamTotalFromData(teamTotals, numTopTeamTotals);
+    return finalTeamTotals;
   } catch (e) {
     console.error('error with getVegasData', e);
     return e;
   }
 }
 
-getVegasData();
-
-
+// Uncomment and run from the terminal if you just want test results
+// getVegasData();
 module.exports = { 
-  getVegasOdds: getVegasData
+  getTeamTotals: getTeamTotals
 };
 
 
